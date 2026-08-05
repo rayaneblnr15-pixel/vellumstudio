@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing & Plans — Vellum Studio</title>
+<style>
+  :root {
+            --fizens-blue: #111;
+        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { 
+    overflow-x: hidden; 
+    scrollbar-width: thin; 
+    scrollbar-color: #111 #e4e4e4;
+  }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #f4f4f4;
+    color: #111;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: #e4e4e4; }
+  ::-webkit-scrollbar-thumb {
+    background-color: #111;
+    border-radius: 999px;
+    border: 3px solid #e4e4e4;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: #444; }
+
+  a { color: inherit; text-decoration: none; }
+  img, svg { display: block; max-width: 100%; }
+
+  .container { width: 100%; background: #f4f4f4; }
+  .inner { max-width: 1400px; margin: 0 auto; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #111;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    padding: 7px 16px 7px 12px;
+    margin-bottom: 16px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #111;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 94px;
+    border-bottom: 1px solid #e0e0e0;
+    flex-wrap: wrap;
+    gap: 16px;
+    position: relative;
+  }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo-image { height: 20px; width: auto; display: block; }
+  .logo-image-small { height: 16px; width: auto; display: block; }
+
+  .nav-links { display: flex; gap: 36px; flex-wrap: wrap; }
+  .nav-links a { text-decoration: none; color: #666; font-size: 15px; font-weight: 400; white-space: nowrap; transition: color .15s ease; }
+  .nav-links a:hover { color: #111; }
+  .nav-links a.active { color: #111; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 1001;
+    position: relative;
+  }
+  .hamburger span {
+    width: 24px;
+    height: 2px;
+    background: #111;
+    display: block;
+    transition: transform .3s cubic-bezier(.65,0,.35,1), opacity .2s ease;
+  }
+  .hamburger.is-active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.is-active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.is-active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: #111;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 48px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-16px);
+    transition: opacity .4s ease, transform .4s ease, visibility 0s linear .4s;
+  }
+  .mobile-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity .45s ease, transform .45s ease;
+  }
+  .mobile-menu-links { display: flex; flex-direction: column; gap: 22px; margin-bottom: 48px; }
+  .mobile-menu-links a {
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.8px;
+    color: #f4f4f4;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .mobile-menu.is-open .mobile-menu-links a { opacity: 1; transform: translateY(0); }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(1) { transition-delay: .08s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(2) { transition-delay: .15s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(3) { transition-delay: .22s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(4) { transition-delay: .29s; }
+
+  .mobile-menu-contact {
+    background: #f4f4f4 !important;
+    color: #111 !important;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .5s ease, transform .5s ease;
+    transition-delay: .36s;
+    align-self: flex-start;
+  }
+  .mobile-menu.is-open .mobile-menu-contact { opacity: 1; transform: translateY(0); }
+
+  body.menu-open { overflow: hidden; }
+
+  .btn-contact {
+    background: #111;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .page-header {
+    padding: 64px 94px 48px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .header-left { max-width: 680px; }
+  .page-header .section-title {
+    font-size: 52px;
+    font-weight: 500;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .page-header .section-desc {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+    max-width: 540px;
+  }
+
+  .billing-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    padding: 6px;
+    border-radius: 999px;
+    border: 1px solid #e0e0e0;
+  }
+  .toggle-btn {
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .toggle-btn.active {
+    background: #111;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .save-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 999px;
+    margin-left: 4px;
+  }
+
+  .pricing-section {
+    padding: 64px 94px 96px;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-bottom: 80px;
+  }
+
+  .pricing-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 28px;
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .pricing-card:hover {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    border-color: #ccc;
+  }
+
+  .pricing-card.featured {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+  .featured-tag {
+    position: absolute;
+    top: -14px;
+    right: 32px;
+    background: #fff;
+    color: #111;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 14px;
+    border-radius: 999px;
+    border: 1px solid #e0e0e0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .pricing-card.featured .featured-tag {
+    background: #333;
+    color: #fff;
+    border-color: #444;
+  }
+
+  .card-header-label {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #888;
+    margin-bottom: 12px;
+  }
+  .pricing-card.featured .card-header-label { color: #aaa; }
+
+  .card-title {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .card-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 28px;
+    min-height: 42px;
+  }
+  .pricing-card.featured .card-desc { color: #bbb; }
+
+  .price-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-bottom: 24px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #eee;
+  }
+  .pricing-card.featured .price-wrapper { border-bottom-color: #262626; }
+
+  .price-amount {
+    font-size: 46px;
+    font-weight: 500;
+    letter-spacing: -1.5px;
+  }
+  .price-period {
+    font-size: 14px;
+    color: #777;
+    font-weight: 400;
+  }
+  .pricing-card.featured .price-period { color: #aaa; }
+
+  .features-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .features-list li {
+    font-size: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: #444;
+    line-height: 1.4;
+  }
+  .pricing-card.featured .features-list li { color: #ddd; }
+
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .pricing-card.featured .check-icon {
+    background: #222;
+    color: #fff;
+  }
+
+  .card-action-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 999px;
+    border: 1px solid #111;
+    background: #111;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s ease;
+  }
+  .card-action-btn:hover {
+    background: #333;
+    border-color: #333;
+  }
+  .pricing-card.featured .card-action-btn {
+    background: #fff;
+    color: #111;
+    border-color: #fff;
+  }
+  .pricing-card.featured .card-action-btn:hover {
+    background: #e4e4e4;
+  }
+
+  .retainer-banner {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 28px;
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 96px;
+  }
+  .retainer-title { font-size: 32px; font-weight: 500; letter-spacing: -0.8px; margin-bottom: 12px; }
+  .retainer-desc { font-size: 15px; color: #666; line-height: 1.6; margin-bottom: 24px; }
+  .retainer-highlights { display: flex; gap: 24px; flex-wrap: wrap; }
+  .retainer-pill {
+    background: #f4f4f4;
+    border: 1px solid #e2e2e2;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #111;
+  }
+  .retainer-pill svg {
+    flex-shrink: 0;
+  }
+
+  .calculator-box {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 28px;
+    padding: 56px 64px;
+    margin-bottom: 96px;
+  }
+  .calc-header { margin-bottom: 36px; text-align: center; }
+  .calc-header h2 { font-size: 36px; font-weight: 500; letter-spacing: -1px; margin-bottom: 10px; }
+  .calc-header p { font-size: 15px; color: #666; }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .calc-option {
+    background: #f8f8f8;
+    border: 1px solid #e2e2e2;
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    transition: all .2s ease;
+  }
+  .calc-option:hover { border-color: #bbb; background: #f2f2f2; }
+  .calc-option.selected {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+  .calc-opt-info h4 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .calc-opt-info p { font-size: 12px; color: #777; }
+  .calc-option.selected .calc-opt-info p { color: #aaa; }
+  .calc-opt-price { font-size: 15px; font-weight: 500; }
+
+  .calc-summary {
+    background: #f4f4f4;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 28px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .calc-summary-left label { font-size: 12px; color: #777; text-transform: uppercase; letter-spacing: 0.8px; display: block; }
+  .calc-total-val { font-size: 38px; font-weight: 500; letter-spacing: -1px; color: #111; }
+  .calc-timeline { font-size: 14px; color: #555; font-weight: 500; }
+
+  .faq-section {
+    max-width: 900px;
+    margin: 0 auto 96px;
+  }
+  .faq-title { font-size: 36px; font-weight: 500; letter-spacing: -1px; text-align: center; margin-bottom: 40px; }
+  .faq-list { display: flex; flex-direction: column; gap: 16px; }
+  .faq-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: border-color .2s ease;
+  }
+  .faq-item.active { border-color: #111; }
+  .faq-question {
+    padding: 24px 28px;
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .faq-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: transform .25s ease;
+  }
+  .faq-item.active .faq-icon { transform: rotate(45deg); background: #111; color: #fff; }
+  .faq-answer {
+    padding: 0 28px 24px;
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+    display: none;
+  }
+  .faq-item.active .faq-answer { display: block; }
+
+  .cta { background: #111; color: #f4f4f4; text-align: center; padding: 110px 94px; }
+  .cta-title { font-size: 44px; font-weight: 500; letter-spacing: -1.2px; max-width: 640px; margin: 0 auto 16px; line-height: 1.15; }
+  .cta-desc { font-size: 16px; color: #999; max-width: 480px; margin: 0 auto 40px; line-height: 1.6; }
+  .cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  
+  .btn-primary { background: #fff; color: #111; padding: 16px 32px; border-radius: 999px; font-size: 15px; font-weight: 500; border: none; cursor: pointer; white-space: nowrap; transition: background .2s ease; }
+  .btn-primary:hover { background: #e0e0e0; }
+  .btn-secondary { background: transparent; color: #f4f4f4; padding: 16px 32px; border-radius: 999px; font-size: 15px; font-weight: 500; border: 1px solid #444; cursor: pointer; white-space: nowrap; transition: border-color .2s ease; }
+  .btn-secondary:hover { border-color: #999; }
+
+  .footer-wrap { background: #f4f4f4; color: #111; border-top: 1px solid #e0e0e0; }
+  footer { padding: 96px 94px 0; position: relative; overflow: hidden; }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    flex-wrap: wrap;
+    padding-bottom: 72px;
+    border-bottom: 1px solid #dcdcdc;
+  }
+  .footer-cta-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 999px;
+    padding: 7px 16px 7px 12px;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer-cta-label::before { content: ''; width: 6px; height: 6px; background: #111; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .footer-cta-title { font-size: 34px; font-weight: 500; letter-spacing: -0.8px; line-height: 1.2; max-width: 460px; margin-bottom: 28px; color: #111; }
+  .footer-cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #111;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 1px solid #111;
+    padding-bottom: 6px;
+  }
+  .footer-cta-link .arrow { transition: transform .2s ease; }
+  .footer-cta-link:hover .arrow { transform: translate(3px, -3px); }
+
+  .footer-links { display: flex; gap: 72px; flex-wrap: wrap; }
+  .footer-col h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 20px; }
+  .footer-col a { display: block; font-size: 15px; color: #555; text-decoration: none; margin-bottom: 13px; transition: color .15s ease; }
+  .footer-col a:hover { color: #111; }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 28px 0;
+    font-size: 13px;
+    color: #888;
+  }
+  .footer-bottom-left { display: flex; align-items: center; gap: 10px; }
+  .footer-socials { display: flex; gap: 24px; }
+  .footer-socials a { color: #777; text-decoration: none; font-size: 13px; transition: color .15s ease; }
+  .footer-socials a:hover { color: #111; }
+
+  .footer-mark {
+    font-size: clamp(70px, 14vw, 200px);
+    font-weight: 500;
+    letter-spacing: -4px;
+    color: #111;
+    opacity: 0.045;
+    white-space: nowrap;
+    line-height: 1;
+    text-align: center;
+    padding: 10px 0 0;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  @media (max-width: 1100px) {
+    .navbar, .page-header, .pricing-section, footer, .cta { padding-left: 48px; padding-right: 48px; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 540px; margin-left: auto; margin-right: auto; }
+    .retainer-banner { grid-template-columns: 1fr; padding: 36px; }
+  }
+
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .navbar .btn-contact { display: none; }
+    .calc-grid { grid-template-columns: 1fr; }
+    .calculator-box { padding: 36px 24px; }
+    .footer-top { flex-direction: column; gap: 40px; padding-bottom: 48px; }
+    .footer-links { gap: 40px; }
+  }
+
+  @media (max-width: 600px) {
+    .navbar, .page-header, .pricing-section, footer, .cta { padding-left: 24px; padding-right: 24px; }
+    .page-header .section-title { font-size: 34px; }
+    .cta-title { font-size: 28px; }
+    .footer-mark { display: none; }
+    .calc-summary { flex-direction: column; align-items: flex-start; }
+  }
+
+  .comparison-section {
+    margin-bottom: 96px;
+  }
+  .comparison-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .comparison-header h2 {
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+  }
+  .comparison-header p {
+    font-size: 15px;
+    color: #666;
+  }
+  .comparison-card {
+    background: #111;
+    color: #fff;
+    border-radius: 28px;
+    padding: 44px 40px;
+    overflow-x: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  }
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 680px;
+  }
+  .comparison-table th, 
+  .comparison-table td {
+    padding: 18px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 14px;
+  }
+  .comparison-table th {
+    font-size: 15px;
+    font-weight: 500;
+    color: #a1a1a1;
+    padding-bottom: 24px;
+  }
+  .comparison-table th.col-feature,
+  .comparison-table td.col-feature {
+    text-align: left;
+    font-weight: 500;
+    color: #e5e5e5;
+    width: 38%;
+  }
+  .comparison-table th.col-vellum {
+    color: #fff;
+    font-weight: 600;
+    font-size: 17px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 14px 14px 0 0;
+  }
+  .comparison-table td.col-vellum {
+    background: rgba(255,255,255,0.06);
+    font-weight: 500;
+  }
+  .comparison-table tr:last-child td {
+    border-bottom: none;
+  }
+  .comparison-table tr:last-child td.col-vellum {
+    border-radius: 0 0 14px 14px;
+  }
+  
+  .icon-check-lime {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #a3e635;
+    color: #111;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .icon-cross-muted {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    color: #666;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+   #splash-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background-color: var(--fizens-blue);
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            align-items: center;
+            z-index: 10000000000;
+            animation: exitSplash 0.8s cubic-bezier(0.85, 0, 0.15, 1) 0.4s forwards;
+        }
+        @keyframes exitSplash {
+            to { transform: translateX(100%); }
+        }
+</style>
+<link rel="stylesheet" href="assets/site-fx.css">
+</head>
+<body>
+<div id="splash-container"></div>
+<div class="container">
+
+  <section class="inner">
+    <nav class="navbar">
+      <a href="index.html" class="logo">
+        <img src="logo.svg" alt="Vellum Studio" class="logo-image">
+      </a>
+      <div class="nav-links">
+        <a href="index.html" >Home</a>
+        <a href="service.html">Services</a>
+        <a href="projets.html" >Projects</a>
+        <a href="pricing.html" class="active">Pricing</a>
+        <a href="blog.html" >Blog</a>
+      </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <button class="btn-contact" onclick="document.getElementById('name').focus()">Contact</button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-links">
+        <a href="index.html" >Home</a>
+        <a href="service.html">Services</a>
+        <a href="projets.html" >Projects</a>
+        <a href="pricing.html" class="active">Pricing</a>
+        <a href="blog.html" >Blog</a>
+      </div>
+      <button class="btn-contact mobile-menu-contact">Contact</button>
+    </div>
+
+    <div class="page-header">
+      <div class="header-left">
+        <div class="eyebrow">Pricing & Plans</div>
+        <h1 class="section-title">Transparent investment for ambitious brands.</h1>
+        <p class="section-desc">Fixed-tier rates and dedicated design retainers. No unexpected scope creep, just predictable, high-impact design excellence.</p>
+      </div>
+
+      <div class="billing-toggle-wrapper">
+        <button class="toggle-btn active" id="btnProject" onclick="setBillingMode('project')">Project Fixed</button>
+        <button class="toggle-btn" id="btnMonthly" onclick="setBillingMode('monthly')">
+          Monthly Retainer <span class="save-badge">Save 15%</span>
+        </button>
+      </div>
+    </div>
+
+    <main class="pricing-section">
+
+      <div class="pricing-grid">
+        
+        <!-- Card 1: Brand Essentials -->
+        <article class="pricing-card">
+          <div>
+            <div class="card-header-label">Identity Core</div>
+            <h3 class="card-title">Brand Essentials</h3>
+            <p class="card-desc">For early-stage startups needing a solid, modern brand system and visual foundations.</p>
+            <div class="price-wrapper">
+              <span class="price-amount" id="price1">$4,800</span>
+              <span class="price-period" id="period1">/ project</span>
+            </div>
+
+            <ul class="features-list">
+              <li><span class="check-icon">✓</span> Strategic Positioning & Visual Direction</li>
+              <li><span class="check-icon">✓</span> Primary & Secondary Logo Suite</li>
+              <li><span class="check-icon">✓</span> Typography & Color Palette System</li>
+              <li><span class="check-icon">✓</span> Comprehensive Brand Book (PDF/Figma)</li>
+              <li><span class="check-icon">✓</span> Exported Vector & Digital Assets</li>
+              <li><span class="check-icon">✓</span> 2 Weeks Delivery Timeline</li>
+            </ul>
+          </div>
+          <a href="contact.html?plan=essentials"><button class="card-action-btn">Choose Essentials</button></a>
+        </article>
+
+        <!-- Card 2: Digital & Webflow (FEATURED) -->
+        <article class="pricing-card featured">
+          <span class="featured-tag">Most Popular</span>
+          <div>
+            <div class="card-header-label">Full Stack Experience</div>
+            <h3 class="card-title">Design & Webflow</h3>
+            <p class="card-desc">High-converting website design & Webflow build built for venture-backed teams.</p>
+            <div class="price-wrapper">
+              <span class="price-amount" id="price2">$8,500</span>
+              <span class="price-period" id="period2">/ project</span>
+            </div>
+
+            <ul class="features-list">
+              <li><span class="check-icon">✓</span> Includes all Brand Essentials</li>
+              <li><span class="check-icon">✓</span> Custom UI/UX Design (Up to 8 Pages)</li>
+              <li><span class="check-icon">✓</span> Bespoke Webflow CMS Build & Animations</li>
+              <li><span class="check-icon">✓</span> Mobile Responsive & Speed Optimization</li>
+              <li><span class="check-icon">✓</span> Technical SEO Setup & OpenGraph</li>
+              <li><span class="check-icon">✓</span> 4 Weeks Delivery Timeline</li>
+            </ul>
+          </div>
+          <a href="contact.html?plan=webflow"><button class="card-action-btn">Start Webflow Project</button></a>
+        </article>
+
+        <!-- Card 3: Enterprise / Product -->
+        <article class="pricing-card">
+          <div>
+            <div class="card-header-label">Complete Ecosystem</div>
+            <h3 class="card-title">Product System</h3>
+            <p class="card-desc">End-to-end design design systems, web application UX, and bespoke front-end architecture.</p>
+            <div class="price-wrapper">
+              <span class="price-amount" id="price3">$14,500</span>
+              <span class="price-period" id="period3">/ project</span>
+            </div>
+
+            <ul class="features-list">
+              <li><span class="check-icon">✓</span> Full Design System & Figma Token Library</li>
+              <li><span class="check-icon">✓</span> Complex Web App UI/UX & Prototypes</li>
+              <li><span class="check-icon">✓</span> Webflow or React Component Integration</li>
+              <li><span class="check-icon">✓</span> Custom 3D & Micro-Interactions</li>
+              <li><span class="check-icon">✓</span> Priority Weekly Strategy Calls</li>
+              <li><span class="check-icon">✓</span> 6-8 Weeks Delivery Timeline</li>
+            </ul>
+          </div>
+          <a href="contact.html?plan=product"><button class="card-action-btn">Request Enterprise Quote</button></a>
+        </article>
+
+      </div>
+
+      <section class="retainer-banner">
+        <div>
+          <div class="eyebrow" style="margin-bottom: 12px;">Dedicated Design Partner</div>
+          <h2 class="retainer-title">Vellum Studio Retainer</h2>
+          <p class="retainer-desc">Get a full senior design team in your Slack channel for a fixed monthly fee. Pause or cancel anytime, no long-term contracts required.</p>
+          <div class="retainer-highlights">
+            <span class="retainer-pill">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              48h Average Turnaround
+            </span>
+            <span class="retainer-pill">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              Unlimited Requests & Revisions
+            </span>
+            <span class="retainer-pill">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              Senior Designers Only
+            </span>
+          </div>
+        </div>
+
+        <div style="background: #f8f8f8; border: 1px solid #e2e2e2; padding: 32px; border-radius: 20px; text-align: center;">
+          <div style="font-size: 12px; color: #777; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">Monthly Membership</div>
+          <div style="font-size: 42px; font-weight: 500; letter-spacing: -1.5px; color: #111;">$6,500<span style="font-size: 16px; color: #888;">/mo</span></div>
+          <p style="font-size: 13px; color: #666; margin: 12px 0 24px;">1 active request at a time. Pause or cancel anytime.</p>
+          <a href="contact.html?plan=retainer"><button class="btn-contact" style="width: 100%;">Apply for Retainer Spot</button></a>
+        </div>
+      </section>
+
+      <section class="calculator-box">
+        <div class="calc-header">
+          <h2>Interactive Scope Estimator</h2>
+          <p>Select the deliverables you need to construct a custom preliminary quote.</p>
+        </div>
+
+        <div class="calc-grid">
+          <div class="calc-option selected" onclick="toggleCalcOption(this, 4000, 2)">
+            <div class="calc-opt-info">
+              <h4>Brand Identity & Guidelines</h4>
+              <p>Logo suite, color system, typography & PDF brand book</p>
+            </div>
+            <div class="calc-opt-price">+$4,000</div>
+          </div>
+
+          <div class="calc-option selected" onclick="toggleCalcOption(this, 4500, 2)">
+            <div class="calc-opt-info">
+              <h4>Webflow Site Build</h4>
+              <p>Custom CMS, animations, SEO and multi-device responsive</p>
+            </div>
+            <div class="calc-opt-price">+$4,500</div>
+          </div>
+
+          <div class="calc-option" onclick="toggleCalcOption(this, 3000, 1)">
+            <div class="calc-opt-info">
+              <h4>Figma UI Design System</h4>
+              <p>Scalable auto-layout components & design tokens</p>
+            </div>
+            <div class="calc-opt-price">+$3,000</div>
+          </div>
+
+          <div class="calc-option" onclick="toggleCalcOption(this, 2000, 1)">
+            <div class="calc-opt-info">
+              <h4>Motion & 3D WebGL Assets</h4>
+              <p>Interactive 3D canvas visuals or custom Lottie motion graphics</p>
+            </div>
+            <div class="calc-opt-price">+$2,000</div>
+          </div>
+        </div>
+
+        <div class="calc-summary">
+          <div class="calc-summary-left">
+            <label>Estimated Investment</label>
+            <div class="calc-total-val" id="calcTotalDisplay">$8,500</div>
+          </div>
+          <div class="calc-timeline" id="calcTimelineDisplay">Estimated Timeline: ~4 Weeks</div>
+          <a href="contact.html"><button class="btn-contact">Book This Scope ↗</button></a>
+        </div>
+      </section>
+
+      <section class="comparison-section">
+        <div class="comparison-header">
+          <div class="eyebrow" style="margin-bottom: 12px;">Why Choose Us</div>
+          <h2>How Vellum Studio Compares</h2>
+          <p>See how our dedicated design model compares to freelancers and traditional outsourcing vendors.</p>
+        </div>
+
+        <div class="comparison-card">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th class="col-feature">Feature</th>
+                <th class="col-vellum">
+                  <span style="display: inline-flex; align-items: center; gap: 8px;">
+                    <span style="width: 20px; height: 20px; background: #fff; color: #111; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;">V</span>
+                    Vellum Studio
+                  </span>
+                </th>
+                <th>Freelancers</th>
+                <th>Outsourcing Vendor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-feature">Senior-level expertise</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+                <td><span class="icon-check-lime">✓</span></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Specialized market knowledge</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+                <td><span class="icon-check-lime">✓</span></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Clear scope, timeline & cost before start</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+                <td><span class="icon-check-lime">✓</span></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Fast project start (3–5 days)</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Pause or cancel subscription anytime</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Direct and fast communication (Slack)</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Dedicated project manager</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+                <td><span class="icon-check-lime">✓</span></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Easy to scale team capacity</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+                <td><span class="icon-check-lime">✓</span></td>
+              </tr>
+              <tr>
+                <td class="col-feature">Minimal client involvement required</td>
+                <td class="col-vellum"><span class="icon-check-lime">✓</span></td>
+                <td><span class="icon-cross-muted">✕</span></td>
+                <td><span class="icon-check-lime">✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="faq-section">
+        <h2 class="faq-title">Frequently Asked Questions</h2>
+        <div class="faq-list">
+          
+          <div class="faq-item active">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>How do your retainer subscriptions work?</span>
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              You pay a flat monthly fee for continuous design deliverables. You can submit as many design requests to your queue as you like, and we complete them one by one (or two at a time on enterprise plans) with rapid 24-48 hour turnarounds.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>What is the payment breakdown for fixed projects?</span>
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              Standard fixed-scope projects are split 50% upfront upon project kickoff and 50% upon final delivery & code transfer.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Why do you build in Webflow?</span>
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              Webflow empowers marketing teams with complete CMS independence while maintaining clean, high-performance HTML/CSS code without technical debt or bulky plugin dependencies.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Can we pause or cancel our subscription?</span>
+              <div class="faq-icon">+</div>
+            </div>
+            <div class="faq-answer">
+              Yes! Billing cycles are based on a 31-day period. If you only have 10 days of design work needed this month, you can pause your subscription and save the remaining 21 days for future use.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </section>
+
+  <section class="inner cta">
+    <h2 class="cta-title">Ready to give your brand the place it deserves?</h2>
+    <p class="cta-desc">Let's talk about your project. Free 30-minute intro call, no strings attached.</p>
+    <div class="cta-buttons">
+      <a href="contact.html"><button class="btn-primary">Start Your Project</button></a>
+      <a href="projects.html"><button class="btn-secondary">View Our Work</button></a>
+    </div>
+  </section>
+
+  <div class="footer-wrap">
+    <footer class="inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-cta-label">Let's build something</div>
+          <h3 class="footer-cta-title">Have a project in mind?<br>We'd love to hear about it.</h3>
+          <a href="mailto:hello@vellumstudio.co" class="footer-cta-link">
+            hello@vellumstudio.co
+            <span class="arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Studio</h4>
+            <a href="index.html">Home</a>
+            <a href="service.html">Services</a>
+            <a href="projects.html">Projects</a>
+            <a href="pricing.html">Pricing</a>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <a href="mailto:hello@vellumstudio.co">hello@vellumstudio.co</a>
+            <a href="tel:+33142685300">+33 1 42 68 53 00</a>
+            <a href="#">Paris, France</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-left">
+          <span>© 2026 Vellum Studio. All rights reserved.</span>
+        </div>
+        <div class="footer-socials">
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Behance</a>
+        </div>
+      </div>
+
+      <div class="footer-mark">Vellum Studio</div>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!isFinePointer) return;
+
+    let current = window.scrollY;
+    let target = window.scrollY;
+    const EASE = 0.045;   // lower = slower / smoother
+    const WHEEL_SPEED = 0.68; // lower = slower per wheel tick
+    let running = false;
+
+    function maxScroll() {
+      return document.documentElement.scrollHeight - window.innerHeight;
+    }
+
+    function clamp(v) {
+      return Math.min(Math.max(v, 0), maxScroll());
+    }
+
+    function loop() {
+      current += (target - current) * EASE;
+      if (Math.abs(target - current) < 0.4) current = target;
+      window.scrollTo(0, current);
+      if (current !== target) {
+        requestAnimationFrame(loop);
+      } else {
+        running = false;
+      }
+    }
+
+    function kick() {
+      if (!running) {
+        running = true;
+        requestAnimationFrame(loop);
+      }
+    }
+
+    window.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      target = clamp(target + e.deltaY * WHEEL_SPEED);
+      kick();
+    }, { passive: false });
+
+    window.addEventListener('keydown', function (e) {
+      const step = window.innerHeight * 0.85;
+      let handled = true;
+      switch (e.key) {
+        case 'ArrowDown': target = clamp(target + 80); break;
+        case 'ArrowUp': target = clamp(target - 80); break;
+        case 'PageDown': case ' ': target = clamp(target + step); break;
+        case 'PageUp': target = clamp(target - step); break;
+        case 'Home': target = 0; break;
+        case 'End': target = maxScroll(); break;
+        default: handled = false;
+      }
+      if (handled) { e.preventDefault(); kick(); }
+    }, { passive: false });
+
+    window.addEventListener('resize', function () {
+      target = clamp(target);
+    });
+
+    document.addEventListener('click', function (e) {
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      const id = link.getAttribute('href').slice(1);
+      const el = id ? document.getElementById(id) : null;
+      if (!el) return;
+      e.preventDefault();
+      target = clamp(el.getBoundingClientRect().top + window.scrollY);
+      kick();
+    });
+
+    current = target = window.scrollY;
+
+    window.__smoothScrollTo = function (y) {
+      target = clamp(y);
+      kick();
+    };
+    window.__smoothScrollGetTarget = function () { return target; };
+  })();
+
+  (function () {
+    const btn = document.getElementById('hamburgerBtn');
+    const menu = document.getElementById('mobileMenu');
+    if (!btn || !menu) return;
+
+    function closeMenu() {
+      btn.classList.remove('is-active');
+      menu.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-open');
+    }
+    function openMenu() {
+      btn.classList.add('is-active');
+      menu.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('menu-open');
+    }
+
+    btn.addEventListener('click', function () {
+      if (menu.classList.contains('is-open')) closeMenu(); else openMenu();
+    });
+
+    menu.querySelectorAll('a, .mobile-menu-contact').forEach(function (el) {
+      el.addEventListener('click', closeMenu);
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 900) closeMenu();
+    });
+  })();
+
+  function setBillingMode(mode) {
+    const btnProject = document.getElementById('btnProject');
+    const btnMonthly = document.getElementById('btnMonthly');
+    
+    const p1 = document.getElementById('price1');
+    const p2 = document.getElementById('price2');
+    const p3 = document.getElementById('price3');
+
+    const per1 = document.getElementById('period1');
+    const per2 = document.getElementById('period2');
+    const per3 = document.getElementById('period3');
+
+    if (mode === 'monthly') {
+      btnMonthly.classList.add('active');
+      btnProject.classList.remove('active');
+
+      p1.textContent = '$3,800';
+      p2.textContent = '$7,200';
+      p3.textContent = '$12,800';
+
+      per1.textContent = '/ month';
+      per2.textContent = '/ month';
+      per3.textContent = '/ month';
+    } else {
+      btnProject.classList.add('active');
+      btnMonthly.classList.remove('active');
+
+      p1.textContent = '$4,800';
+      p2.textContent = '$8,500';
+      p3.textContent = '$14,500';
+
+      per1.textContent = '/ project';
+      per2.textContent = '/ project';
+      per3.textContent = '/ project';
+    }
+  }
+
+  let currentTotal = 8500;
+  let currentWeeks = 4;
+
+  function toggleCalcOption(el, price, weeks) {
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      currentTotal -= price;
+      currentWeeks -= weeks;
+    } else {
+      el.classList.add('selected');
+      currentTotal += price;
+      currentWeeks += weeks;
+    }
+
+    const totalDisplay = document.getElementById('calcTotalDisplay');
+    const timelineDisplay = document.getElementById('calcTimelineDisplay');
+
+    totalDisplay.textContent = '$' + currentTotal.toLocaleString();
+    timelineDisplay.textContent = 'Estimated Timeline: ~' + Math.max(1, currentWeeks) + ' Weeks';
+  }
+
+  function toggleFaq(el) {
+    const parent = el.closest('.faq-item');
+    const isOpen = parent.classList.contains('active');
+
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.classList.remove('active');
+    });
+
+    if (!isOpen) {
+      parent.classList.add('active');
+    }
+  }
+</script>
+
+<script src="assets/site-fx.js" defer></script>
+</body>
+</html>

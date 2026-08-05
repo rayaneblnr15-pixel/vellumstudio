@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Detail — Vellum Studio</title>
+<style>
+  :root {
+            --fizens-blue: #111;
+        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #111 #e4e4e4; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #f4f4f4;
+    color: #111;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: #e4e4e4; }
+  ::-webkit-scrollbar-thumb {
+    background-color: #111;
+    border-radius: 999px;
+    border: 3px solid #e4e4e4;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: #444; }
+
+  a { color: inherit; }
+  img, svg { display: block; }
+
+  .container { width: 100%; background: #f4f4f4; }
+  .inner { max-width: 1400px; margin: 0 auto; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #111;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    padding: 7px 16px 7px 12px;
+    margin-bottom: 16px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #111;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* ============ NAVBAR ============ */
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 94px;
+    border-bottom: 1px solid #e0e0e0;
+    flex-wrap: wrap;
+    gap: 16px;
+    position: relative;
+  }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo-image { height: 20px; width: auto; display: block; }
+  .logo-image-small { height: 16px; width: auto; display: block; }
+
+  .nav-links { display: flex; gap: 36px; flex-wrap: wrap; }
+  .nav-links a { text-decoration: none; color: #666; font-size: 15px; font-weight: 400; white-space: nowrap; transition: color .15s ease; }
+  .nav-links a:hover { color: #111; }
+  .nav-links a.active { color: #111; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 1001;
+    position: relative;
+  }
+  .hamburger span {
+    width: 24px;
+    height: 2px;
+    background: #111;
+    display: block;
+    transition: transform .3s cubic-bezier(.65,0,.35,1), opacity .2s ease;
+  }
+  .hamburger.is-active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.is-active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.is-active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: #111;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 48px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-16px);
+    transition: opacity .4s ease, transform .4s ease, visibility 0s linear .4s;
+  }
+  .mobile-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity .45s ease, transform .45s ease;
+  }
+  .mobile-menu-links { display: flex; flex-direction: column; gap: 22px; margin-bottom: 48px; }
+  .mobile-menu-links a {
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.8px;
+    color: #f4f4f4;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .mobile-menu.is-open .mobile-menu-links a { opacity: 1; transform: translateY(0); }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(1) { transition-delay: .08s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(2) { transition-delay: .15s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(3) { transition-delay: .22s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(4) { transition-delay: .29s; }
+
+  .mobile-menu-contact {
+    background: #f4f4f4 !important;
+    color: #111 !important;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .5s ease, transform .5s ease;
+    transition-delay: .36s;
+    align-self: flex-start;
+  }
+  .mobile-menu.is-open .mobile-menu-contact { opacity: 1; transform: translateY(0); }
+
+  body.menu-open { overflow: hidden; }
+
+  .btn-contact {
+    background: #111;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* ============ PAGE HEADER ============ */
+  .page-header { padding: 64px 94px 0; max-width: 760px; }
+  .page-header .section-title { font-size: 48px; font-weight: 500; letter-spacing: -1.3px; line-height: 1.12; max-width: 640px; margin-bottom: 16px; }
+  .page-header .section-desc { font-size: 16px; color: #666; line-height: 1.6; max-width: 460px; }
+
+  /* ============ SECTION SHELL ============ */
+  section.block { padding: 96px 94px; }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 64px;
+    flex-wrap: wrap;
+  }
+  .section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.15; max-width: 560px; }
+  .section-desc { font-size: 16px; color: #666; line-height: 1.6; max-width: 380px; }
+
+  /* ============ SERVICES DETAIL ============ */
+  .services-detail { padding-top: 40px; display: flex; flex-direction: column; }
+
+  .service-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 48px;
+    padding: 64px 94px;
+    border-top: 1px solid #e0e0e0;
+    align-items: start;
+  }
+  .service-row:last-child { border-bottom: 1px solid #e0e0e0; }
+
+  .service-row-index { font-size: 15px; font-weight: 600; color: #999; letter-spacing: 1px; padding-top: 4px; }
+
+  .service-row-main { max-width: 420px; }
+  .service-row-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .service-row-icon svg { stroke: #111; }
+  .service-row-name { font-size: 28px; font-weight: 500; letter-spacing: -0.5px; margin-bottom: 12px; }
+  .service-row-text { font-size: 15px; color: #666; line-height: 1.65; margin-bottom: 28px; }
+
+  .service-row-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .service-row-tags span { font-size: 12px; color: #666; border: 1px solid #ccc; border-radius: 999px; padding: 6px 13px; }
+
+  .service-row-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; align-content: start; }
+  .service-row-list li { border-top: 1px solid #e8e8e8; }
+  .service-row-list li:nth-child(1), .service-row-list li:nth-child(2) { border-top: none; }
+
+  .service-row-list li a {
+    font-size: 14.5px;
+    color: #333;
+    text-decoration: none;
+    padding: 11px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color .15s ease, gap .15s ease;
+  }
+  .service-row-list li a::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: #999; flex-shrink: 0; transition: background .15s ease; }
+  .service-row-list li a .item-arrow {
+    display: inline-flex;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity .18s ease, transform .18s ease;
+    margin-left: auto;
+  }
+  .service-row-list li a .item-arrow svg { stroke: #111; }
+  .service-row-list li a:hover { color: #111; gap: 14px; }
+  .service-row-list li a:hover::before { background: #111; }
+  .service-row-list li a:hover .item-arrow { opacity: 1; transform: translateX(0); }
+
+  /* ============ APPROACH STRIP ============ */
+  .approach { background: #111; color: #f4f4f4; }
+  .approach .eyebrow { color: #f4f4f4; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14); }
+  .approach .eyebrow::before { background: #f4f4f4; }
+  .approach .section-desc { color: #999; }
+
+  .approach-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); margin-top: 8px; }
+  .approach-card { background: #111; padding: 36px 30px; }
+  .approach-num { font-size: 13px; color: #777; font-weight: 600; letter-spacing: 1px; margin-bottom: 22px; }
+  .approach-name { font-size: 19px; font-weight: 500; margin-bottom: 10px; letter-spacing: -0.2px; }
+  .approach-text { font-size: 14px; color: #999; line-height: 1.6; }
+
+  /* ============ FAQ ============ */
+  .faq-list { max-width: 780px; }
+  .faq-item { border-top: 1px solid #e0e0e0; }
+  .faq-item:last-child { border-bottom: 1px solid #e0e0e0; }
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 26px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    color: #111;
+    font-family: inherit;
+  }
+  .faq-icon { width: 20px; height: 20px; position: relative; flex-shrink: 0; }
+  .faq-icon::before, .faq-icon::after {
+    content: '';
+    position: absolute;
+    background: #111;
+    transition: transform .25s ease;
+  }
+  .faq-icon::before { top: 9px; left: 0; width: 20px; height: 2px; }
+  .faq-icon::after { top: 0; left: 9px; width: 2px; height: 20px; }
+  .faq-item.is-open .faq-icon::after { transform: rotate(90deg); opacity: 0; }
+
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+  .faq-answer-inner { padding-bottom: 26px; font-size: 15px; color: #666; line-height: 1.7; max-width: 640px; }
+
+  /* ============ CTA ============ */
+  .cta { background: #111; color: #f4f4f4; text-align: center; padding: 110px 94px; }
+  .cta-title { font-size: 44px; font-weight: 500; letter-spacing: -1.2px; max-width: 640px; margin: 0 auto 16px; line-height: 1.15; }
+  .cta-desc { font-size: 16px; color: #999; max-width: 480px; margin: 0 auto 40px; line-height: 1.6; }
+  .cta .btn-primary { background: #f4f4f4; color: #111; }
+  .cta .btn-primary:hover { background: #fff; }
+  .cta .btn-secondary { border-color: #444; color: #f4f4f4; }
+  .cta .btn-secondary:hover { border-color: #999; }
+  .cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .btn-primary { background: #111; color: #fff; padding: 16px 32px; border-radius: 999px; font-size: 15px; font-weight: 500; border: none; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
+  .btn-secondary { background: transparent; color: #111; padding: 16px 32px; border-radius: 999px; font-size: 15px; font-weight: 500; border: 1px solid #ccc; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary:hover { border-color: #111; }
+
+  /* ============ FOOTER ============ */
+  .footer-wrap { background: #f4f4f4; color: #111; }
+  footer { padding: 96px 94px 0; position: relative; overflow: hidden; }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    flex-wrap: wrap;
+    padding-bottom: 72px;
+    border-bottom: 1px solid #dcdcdc;
+  }
+  .footer-cta-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 999px;
+    padding: 7px 16px 7px 12px;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer-cta-label::before { content: ''; width: 6px; height: 6px; background: #111; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .footer-cta-title { font-size: 34px; font-weight: 500; letter-spacing: -0.8px; line-height: 1.2; max-width: 460px; margin-bottom: 28px; color: #111; }
+  .footer-cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #111;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 1px solid #111;
+    padding-bottom: 6px;
+  }
+  .footer-cta-link .arrow { transition: transform .2s ease; }
+  .footer-cta-link:hover .arrow { transform: translate(3px, -3px); }
+
+  .footer-links { display: flex; gap: 72px; flex-wrap: wrap; }
+  .footer-col h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 20px; }
+  .footer-col a { display: block; font-size: 15px; color: #555; text-decoration: none; margin-bottom: 13px; transition: color .15s ease; }
+  .footer-col a:hover { color: #111; }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 28px 0;
+    font-size: 13px;
+    color: #888;
+  }
+  .footer-bottom-left { display: flex; align-items: center; gap: 10px; }
+  .footer-socials { display: flex; gap: 24px; }
+  .footer-socials a { color: #777; text-decoration: none; font-size: 13px; transition: color .15s ease; }
+  .footer-socials a:hover { color: #111; }
+
+  .footer-mark {
+    font-size: clamp(70px, 14vw, 200px);
+    font-weight: 500;
+    letter-spacing: -4px;
+    color: #111;
+    opacity: 0.045;
+    white-space: nowrap;
+    line-height: 1;
+    text-align: center;
+    padding: 10px 0 0;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1100px) {
+    .navbar, .page-header, section.block, .cta, footer { padding-left: 48px; padding-right: 48px; }
+    .service-row { padding-left: 48px; padding-right: 48px; }
+    .page-header .section-title { font-size: 40px; }
+    .section-title { font-size: 34px; }
+    .cta-title { font-size: 36px; }
+    .service-row { grid-template-columns: 60px 1fr; }
+    .service-row-list { grid-column: 1 / -1; margin-top: 12px; }
+    .approach-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .navbar .btn-contact { display: none; }
+    section.block { padding: 72px 48px; }
+    .service-row { padding: 48px; grid-template-columns: 1fr; }
+    .service-row-index { padding-top: 0; }
+    .service-row-list { grid-template-columns: 1fr; }
+    .footer-top { flex-direction: column; gap: 40px; padding-bottom: 48px; }
+    .footer-links { gap: 40px; }
+  }
+
+  @media (max-width: 600px) {
+    .navbar, .page-header, section.block, .cta, footer { padding-left: 24px; padding-right: 24px; }
+    .service-row { padding: 40px 24px; }
+    .page-header { padding-top: 40px; }
+    .page-header .section-title { font-size: 30px; }
+    .section-title { font-size: 26px; }
+    .section-head { margin-bottom: 40px; }
+    .approach-grid { grid-template-columns: 1fr; }
+    .cta-title { font-size: 28px; }
+    .cta-buttons { flex-direction: column; align-items: stretch; width: 100%; }
+    .cta { padding: 72px 24px; }
+    .footer-cta-title { font-size: 26px; }
+    .footer-links { gap: 32px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+    .footer-mark { display: none; }
+  }
+   #splash-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background-color: var(--fizens-blue);
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            align-items: center;
+            z-index: 10000000000;
+            animation: exitSplash 0.8s cubic-bezier(0.85, 0, 0.15, 1) 0.4s forwards;
+        }
+        @keyframes exitSplash {
+            to { transform: translateX(100%); }
+        }
+
+  /* ============ SERVICE DETAIL PAGE ============ */
+  .detail-hero { padding: 64px 94px 0; }
+  .detail-hero .service-row-icon { margin-bottom: 24px; }
+  .detail-category { font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #999; margin-bottom: 14px; }
+  .detail-title { font-size: 48px; font-weight: 500; letter-spacing: -1.3px; line-height: 1.1; max-width: 720px; margin-bottom: 20px; }
+  .detail-lede { font-size: 17px; color: #666; line-height: 1.65; max-width: 620px; margin-bottom: 28px; }
+  .detail-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .detail-tags span { font-size: 12px; color: #666; border: 1px solid #ccc; border-radius: 999px; padding: 6px 13px; }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 64px;
+    padding: 80px 94px;
+    align-items: start;
+  }
+
+  .process-list { display: flex; flex-direction: column; gap: 0; }
+  .process-step { display: grid; grid-template-columns: 48px 1fr; gap: 20px; padding: 26px 0; border-top: 1px solid #e0e0e0; }
+  .process-list .process-step:last-child { border-bottom: 1px solid #e0e0e0; }
+  .process-num { font-size: 14px; font-weight: 600; color: #999; padding-top: 2px; }
+  .process-name { font-size: 17px; font-weight: 500; margin-bottom: 6px; letter-spacing: -0.2px; }
+  .process-text { font-size: 14.5px; color: #666; line-height: 1.6; }
+
+  .deliverables-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 20px; padding: 40px; }
+  .deliverables-box h3 { font-size: 20px; font-weight: 500; margin-bottom: 20px; letter-spacing: -0.3px; }
+  .deliverables-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+  .deliverables-list li { font-size: 14.5px; color: #333; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+  .deliverables-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #111; margin-top: 8px; flex-shrink: 0; }
+  .deliverables-box .btn-primary { width: 100%; text-align: center; }
+
+  .related-wrap { padding: 0 94px 96px; }
+  .related-title { font-size: 22px; font-weight: 500; margin-bottom: 24px; letter-spacing: -0.3px; }
+  .related-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .related-list a {
+    display: flex; align-items: center; justify-content: space-between;
+    text-decoration: none; color: #333; font-size: 14.5px;
+    background: #fff; border: 1px solid #e0e0e0; border-radius: 14px;
+    padding: 16px 18px; transition: border-color .15s ease, color .15s ease;
+  }
+  .related-list a:hover { border-color: #111; color: #111; }
+
+  .detail-not-found { padding: 120px 94px; text-align: center; }
+  .detail-not-found h1 { font-size: 32px; margin-bottom: 12px; }
+  .detail-not-found p { color: #666; margin-bottom: 28px; }
+
+  @media (max-width: 1100px) {
+    .detail-hero, .detail-grid, .related-wrap { padding-left: 48px; padding-right: 48px; }
+    .detail-title { font-size: 38px; }
+    .detail-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+  @media (max-width: 600px) {
+    .detail-hero, .detail-grid, .related-wrap { padding-left: 24px; padding-right: 24px; }
+    .detail-title { font-size: 30px; }
+    .detail-grid { padding-top: 48px; padding-bottom: 48px; }
+    .deliverables-box { padding: 28px; }
+  }
+</style>
+<link rel="stylesheet" href="assets/site-fx.css">
+</head>
+<body>
+<div id="splash-container"></div>
+<div class="container">
+
+  <!-- ============ NAVBAR ============ -->
+  <section class="inner">
+    <nav class="navbar">
+      <a href="index.html" class="logo">
+        <img src="logo.svg" alt="Vellum Studio" class="logo-image">
+      </a>
+      <div class="nav-links">
+        <a href="index.html" >Home</a>
+        <a href="service.html" class="active">Services</a>
+        <a href="projets.html" >Projects</a>
+        <a href="pricing.html" >Pricing</a>
+        <a href="blog.html" >Blog</a>
+      </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <button class="btn-contact" onclick="document.getElementById('name').focus()">Contact</button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-links">
+        <a href="index.html">Home</a>
+        <a href="service.html" class="active">Services</a>
+        <a href="projets.html">Projects</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html" >Blog</a>
+      </div>
+      <button class="btn-contact mobile-menu-contact">Contact</button>
+    </div>
+
+    <script>
+      (function () {
+        const btn = document.getElementById('hamburgerBtn');
+        const menu = document.getElementById('mobileMenu');
+        if (!btn || !menu) return;
+
+        function closeMenu() {
+          btn.classList.remove('is-active');
+          menu.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('menu-open');
+        }
+        function openMenu() {
+          btn.classList.add('is-active');
+          menu.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+          document.body.classList.add('menu-open');
+        }
+
+        btn.addEventListener('click', function () {
+          if (menu.classList.contains('is-open')) closeMenu(); else openMenu();
+        });
+
+        menu.querySelectorAll('a').forEach(function (el) {
+          el.addEventListener('click', closeMenu);
+        });
+
+        window.addEventListener('resize', function () {
+          if (window.innerWidth > 900) closeMenu();
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeMenu();
+        });
+      })();
+    </script>
+
+    <script>
+      // Custom slow-eased smooth scroll (desktop wheel + anchor links),
+      // matching the home page. Native touch scrolling on mobile is untouched.
+      (function () {
+        const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (!isFinePointer) return;
+
+        let current = window.scrollY;
+        let target = window.scrollY;
+        const EASE = 0.045;
+        const WHEEL_SPEED = 0.68;
+        let running = false;
+
+        function maxScroll() {
+          return document.documentElement.scrollHeight - window.innerHeight;
+        }
+        function clamp(v) {
+          return Math.min(Math.max(v, 0), maxScroll());
+        }
+        function loop() {
+          current += (target - current) * EASE;
+          if (Math.abs(target - current) < 0.4) current = target;
+          window.scrollTo(0, current);
+          if (current !== target) {
+            requestAnimationFrame(loop);
+          } else {
+            running = false;
+          }
+        }
+        function kick() {
+          if (!running) {
+            running = true;
+            requestAnimationFrame(loop);
+          }
+        }
+
+        window.addEventListener('wheel', function (e) {
+          e.preventDefault();
+          target = clamp(target + e.deltaY * WHEEL_SPEED);
+          kick();
+        }, { passive: false });
+
+        window.addEventListener('keydown', function (e) {
+          const step = window.innerHeight * 0.85;
+          let handled = true;
+          switch (e.key) {
+            case 'ArrowDown': target = clamp(target + 80); break;
+            case 'ArrowUp': target = clamp(target - 80); break;
+            case 'PageDown': case ' ': target = clamp(target + step); break;
+            case 'PageUp': target = clamp(target - step); break;
+            case 'Home': target = 0; break;
+            case 'End': target = maxScroll(); break;
+            default: handled = false;
+          }
+          if (handled) { e.preventDefault(); kick(); }
+        }, { passive: false });
+
+        window.addEventListener('resize', function () {
+          target = clamp(target);
+        });
+
+        document.addEventListener('click', function (e) {
+          const link = e.target.closest('a[href^="#"]');
+          if (!link) return;
+          const id = link.getAttribute('href').slice(1);
+          const el = id ? document.getElementById(id) : null;
+          if (!el) return;
+          e.preventDefault();
+          target = clamp(el.getBoundingClientRect().top + window.scrollY);
+          kick();
+        });
+
+        current = target = window.scrollY;
+        window.__smoothScrollTo = function (y) { target = clamp(y); kick(); };
+        window.__smoothScrollGetTarget = function () { return target; };
+      })();
+    </script>
+
+    <!-- ============ SERVICE DETAIL (rendered by JS below) ============ -->
+    <main id="detailRoot">
+      <div class="detail-hero">
+        <div class="eyebrow">Loading…</div>
+        <h1 class="detail-title">Loading service…</h1>
+      </div>
+    </main>
+
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="inner cta">
+      <h2 class="cta-title">Ready to give your brand the place it deserves?</h2>
+      <p class="cta-desc">Let's talk about your project. Free 30-minute intro call, no strings attached.</p>
+      <div class="cta-buttons">
+        <a href="contact.html" class="btn-primary">Start Your Project</a>
+        <a href="index.html#projects" class="btn-secondary">View Our Work</a>
+      </div>
+    </section>
+
+    <script>
+      // ============ SERVICE DATA ============
+      var SERVICES = {
+        "brand-strategy-positioning": {
+          category: "Branding", name: "Brand strategy &amp; positioning",
+          lede: "Before anything gets designed, we define who you're for, what you stand for, and why someone should choose you over the next studio in their tab list.",
+          tags: ["Strategy", "Research", "Positioning"],
+          steps: [
+            ["Discovery workshop", "We sit down with your team to map the market, your competitors, and the gap you actually occupy."],
+            ["Audience &amp; voice", "We define who you're speaking to and the tone that will run through every touchpoint."],
+            ["Positioning statement", "A clear, single-page articulation of what makes you different — the reference document for every decision after."],
+            ["Handoff to design", "Strategy becomes the brief the design team builds from, so nothing downstream is guesswork."]
+          ],
+          deliverables: ["Market &amp; competitor audit", "Audience &amp; messaging framework", "Positioning statement", "Brand voice guidelines"]
+        },
+        "naming": {
+          category: "Branding", name: "Naming",
+          lede: "A name has to work in a URL, a pitch, and a conversation. We run a structured process to land on one that's memorable, available, and true to what you do.",
+          tags: ["Strategy", "Naming", "Trademark check"],
+          steps: [
+            ["Territory mapping", "We explore naming directions — descriptive, invented, evocative — based on your positioning."],
+            ["Shortlisting", "Every candidate is checked for domain availability and basic trademark conflicts before it reaches you."],
+            ["Testing", "Shortlisted names are pressure-tested out loud, in context, next to your competitors."],
+            ["Final selection", "You land on one name backed by a rationale you can defend to your team or investors."]
+          ],
+          deliverables: ["20+ naming directions", "Domain &amp; trademark screening", "Shortlist with rationale", "Final name &amp; tagline options"]
+        },
+        "logo-design": {
+          category: "Branding", name: "Logo design",
+          lede: "A mark that holds up at 16px in a browser tab and 6 metres on a storefront. We design systems, not single images.",
+          tags: ["Identity", "Iconography", "Systems"],
+          steps: [
+            ["Concept sketching", "Multiple directions explored on paper before anything touches a screen."],
+            ["Digital refinement", "The strongest concepts are vectorised and tested across sizes and backgrounds."],
+            ["System building", "Primary mark, submark, favicon and monochrome versions built as one coherent family."],
+            ["File delivery", "Every format you'll ever need — SVG, PNG, EPS — organised and ready to hand to any vendor."]
+          ],
+          deliverables: ["Primary logo + submark", "Favicon &amp; app icon", "Monochrome &amp; reversed versions", "Full export package (SVG, PNG, EPS)"]
+        },
+        "brand-guidelines": {
+          category: "Branding", name: "Brand guidelines",
+          lede: "So the brand still looks like the brand a year from now, no matter who's opening the file — freelancer, agency, or your own new hire.",
+          tags: ["Documentation", "Systems", "Governance"],
+          steps: [
+            ["Audit the system", "We catalogue every element already in use — colour, type, spacing, imagery."],
+            ["Define the rules", "Clear do's and don'ts for logo usage, colour pairing, and typographic hierarchy."],
+            ["Show it in context", "Real examples: a social post, a slide, a business card — not just isolated specs."],
+            ["Publish &amp; hand off", "Delivered as a living document your team can reference and extend."]
+          ],
+          deliverables: ["Logo usage rules", "Colour &amp; type system", "Applied examples", "Editable guideline document"]
+        },
+        "rebranding": {
+          category: "Branding", name: "Rebranding",
+          lede: "For companies that have outgrown their original identity. We keep what's earned recognition and rebuild what's holding you back.",
+          tags: ["Strategy", "Identity", "Migration"],
+          steps: [
+            ["Equity audit", "We identify what customers already recognise and trust, so we don't throw it away by accident."],
+            ["Repositioning", "Strategy is revisited against where the company is today, not where it was at launch."],
+            ["Redesign", "A refreshed or rebuilt identity system, tested against the old one for a clean improvement."],
+            ["Rollout plan", "A staged plan for updating every touchpoint without disrupting the business."]
+          ],
+          deliverables: ["Brand equity audit", "Updated positioning", "New identity system", "Rollout &amp; migration plan"]
+        },
+        "pitch-decks": {
+          category: "Branding", name: "Pitch decks",
+          lede: "Investors and buyers skim. We design decks that make your story land in the first five slides and hold up under questions after.",
+          tags: ["Storytelling", "Design", "Investor-ready"],
+          steps: [
+            ["Narrative first", "We work with you to structure the story — problem, solution, traction, ask — before touching layout."],
+            ["Content workshop", "We tighten your copy so every slide earns its place; no filler slides survive this stage."],
+            ["Visual design", "Charts, diagrams and slide layouts built in your brand system, designed to be read in seconds."],
+            ["Presenter version", "A version built for you to present live, plus a leave-behind PDF that reads well on its own."]
+          ],
+          deliverables: ["Story &amp; slide structure", "Full visual design (10–20 slides)", "Editable source file (Figma/Keynote)", "Leave-behind PDF version"]
+        },
+        "social-media-kits": {
+          category: "Branding", name: "Social media kits",
+          lede: "Templates that keep your feed consistent without needing a designer for every post.",
+          tags: ["Templates", "Social", "Content systems"],
+          steps: [
+            ["Platform audit", "We look at where you actually post and design for those formats specifically."],
+            ["Template design", "Post, story and cover templates built around your brand system."],
+            ["Content examples", "A first batch of ready-to-use posts so your team sees the system in action."],
+            ["Editable handoff", "Delivered in Canva or Figma so your team can update copy without breaking the design."]
+          ],
+          deliverables: ["Post &amp; story templates", "Profile &amp; cover assets", "Sample content batch", "Editable Canva/Figma file"]
+        },
+        "print-packaging": {
+          category: "Branding", name: "Print &amp; packaging",
+          lede: "From business cards to product boxes — designed to be print-production ready, not just pretty on screen.",
+          tags: ["Print", "Packaging", "Production files"],
+          steps: [
+            ["Format &amp; materials", "We scope the exact pieces you need and the substrates or box types involved."],
+            ["Design development", "Layouts designed with bleed, dielines and print constraints considered from the start."],
+            ["Proofing", "Digital proofs reviewed with you before anything goes to a printer."],
+            ["Print-ready files", "Press-ready files handed to your printer of choice, with specs included."]
+          ],
+          deliverables: ["Business cards &amp; stationery", "Packaging / dieline design", "Print-ready production files", "Printer spec sheet"]
+        },
+        "ui-ux-design": {
+          category: "Design", name: "UI/UX design",
+          lede: "Interfaces designed around how people actually use your product, not how the org chart is structured.",
+          tags: ["UI/UX", "Prototyping", "Usability"],
+          steps: [
+            ["Flow mapping", "We map the key user journeys before any screen is drawn."],
+            ["Wireframes", "Low-fidelity structure agreed on before visual design begins, so changes are cheap."],
+            ["Visual design", "High-fidelity screens built in your design system, states and edge cases included."],
+            ["Interactive prototype", "A clickable prototype your team or investors can test before development starts."]
+          ],
+          deliverables: ["User flow diagrams", "Wireframes", "High-fidelity UI screens", "Clickable prototype"]
+        },
+        "web-design": {
+          category: "Design", name: "Web design",
+          lede: "A website designed to convert, not just to look good on a portfolio. Every page has a job to do.",
+          tags: ["UI/UX", "Conversion", "Responsive"],
+          steps: [
+            ["Sitemap &amp; content plan", "We define every page and what it needs to accomplish before designing anything."],
+            ["Wireframes", "Layout and hierarchy locked in low-fidelity, reviewed with you before visual design."],
+            ["Visual design", "Full desktop and mobile designs in your brand system, page by page."],
+            ["Dev-ready handoff", "Specs, assets and states organised so development moves fast with no guesswork."]
+          ],
+          deliverables: ["Sitemap &amp; content plan", "Wireframes (desktop &amp; mobile)", "Full visual design, page by page", "Dev-ready handoff file"]
+        },
+        "landing-page-design": {
+          category: "Design", name: "Landing page design",
+          lede: "A single page built around one goal — a launch, a campaign, a product — designed to convert visitors fast.",
+          tags: ["Conversion", "Campaigns", "A/B ready"],
+          steps: [
+            ["Goal &amp; offer clarity", "We pin down the one action the page needs to drive before designing a single pixel."],
+            ["Copy &amp; structure", "Section order and messaging built around how people actually scroll and decide."],
+            ["Visual design", "A focused, distraction-free layout designed to move visitors toward the goal."],
+            ["Handoff or build", "Delivered as a design file, or built and launched directly if you want it live fast."]
+          ],
+          deliverables: ["Page structure &amp; copy outline", "Full visual design", "Mobile-responsive layout", "Dev-ready or built &amp; launched"]
+        },
+        "design-systems": {
+          category: "Design", name: "Design systems",
+          lede: "A reusable library of components so your product team ships consistent screens without redesigning buttons every sprint.",
+          tags: ["Systems", "Components", "Scalability"],
+          steps: [
+            ["Audit existing UI", "We catalogue what's already live and where inconsistency is creeping in."],
+            ["Foundations", "Colour, type, spacing and grid rules defined as reusable tokens."],
+            ["Component library", "Buttons, forms, cards and navigation built once, documented, and ready to reuse."],
+            ["Dev integration support", "We work with your engineers to get components into code cleanly."]
+          ],
+          deliverables: ["Design tokens (colour, type, spacing)", "Component library (Figma)", "Usage documentation", "Dev integration support"]
+        },
+        "ui-ux-audits": {
+          category: "Design", name: "UI/UX audits",
+          lede: "A structured review of your existing product or site, flagging exactly where usability is costing you conversions.",
+          tags: ["Audit", "Usability", "Recommendations"],
+          steps: [
+            ["Heuristic review", "We evaluate your product against established usability principles, screen by screen."],
+            ["User flow analysis", "Key journeys are tested for friction, dead ends and confusing steps."],
+            ["Prioritised findings", "Issues ranked by impact and effort, so you know what to fix first."],
+            ["Recommendations report", "A clear, actionable report your team can implement with or without us."]
+          ],
+          deliverables: ["Heuristic evaluation", "Annotated screen findings", "Prioritised issue list", "Recommendations report"]
+        },
+        "website-redesign": {
+          category: "Design", name: "Website redesign",
+          lede: "For sites that have grown messy over time. We rebuild the experience around what your business needs today.",
+          tags: ["Redesign", "Conversion", "Migration"],
+          steps: [
+            ["Performance audit", "We review analytics and user behaviour to see what's actually working and what isn't."],
+            ["New structure", "Sitemap and content strategy rebuilt around current goals, not legacy decisions."],
+            ["Redesign", "Every page redesigned in a coherent system, built for the goals identified in the audit."],
+            ["Safe migration", "A launch plan that protects your SEO and existing traffic through the switch."]
+          ],
+          deliverables: ["Performance &amp; content audit", "New sitemap &amp; structure", "Full page-by-page redesign", "SEO-safe migration plan"]
+        },
+        "mobile-app-design": {
+          category: "Design", name: "Mobile app design",
+          lede: "Native-feeling iOS and Android interfaces designed around platform conventions users already know.",
+          tags: ["iOS", "Android", "Prototyping"],
+          steps: [
+            ["Flow mapping", "Core user journeys mapped for both platforms before screens are drawn."],
+            ["Wireframes", "Structure and navigation patterns agreed before visual design starts."],
+            ["Visual design", "Screens designed following iOS and Android conventions, in your brand system."],
+            ["Interactive prototype", "A tappable prototype ready for user testing or investor demos."]
+          ],
+          deliverables: ["User flow diagrams", "Wireframes", "Full UI screen set", "Interactive prototype"]
+        },
+        "wireframing": {
+          category: "Design", name: "Wireframing",
+          lede: "Fast, low-fidelity structure so layout and flow decisions get made before any time is spent on visual polish.",
+          tags: ["Structure", "Flow", "Rapid iteration"],
+          steps: [
+            ["Content inventory", "We list everything that needs to appear on each screen or page."],
+            ["Layout structure", "Content is arranged for hierarchy and flow, in grayscale, no styling yet."],
+            ["Review &amp; iterate", "Wireframes reviewed with you and adjusted quickly since nothing is precious yet."],
+            ["Handoff", "Approved wireframes become the blueprint for visual design or development."]
+          ],
+          deliverables: ["Content inventory", "Low-fidelity wireframes", "Annotated flow notes", "Ready-to-build blueprint"]
+        },
+        "web-development": {
+          category: "Development", name: "Web development",
+          lede: "Clean, maintainable code that turns approved designs into a fast, real website — not a pixel-perfect screenshot with bugs.",
+          tags: ["Front-end", "Performance", "Clean code"],
+          steps: [
+            ["Technical planning", "We choose the right stack for your needs, not the trendiest one."],
+            ["Build", "Design is translated into responsive, accessible, well-structured code."],
+            ["QA across devices", "Every page tested across browsers and screen sizes before anything ships."],
+            ["Launch &amp; handoff", "Site goes live with documentation so your team can maintain it after we're done."]
+          ],
+          deliverables: ["Responsive site build", "Cross-browser QA", "Basic on-page SEO setup", "Deployment &amp; documentation"]
+        },
+        "webflow-development": {
+          category: "Development", name: "Webflow development",
+          lede: "Designed and built in Webflow so your team can edit content directly, without needing a developer for every change.",
+          tags: ["Webflow", "CMS", "No-code editing"],
+          steps: [
+            ["Structure planning", "We plan CMS collections and page structure to match how your content actually grows."],
+            ["Build in Webflow", "Design implemented natively in Webflow, with interactions and responsive behaviour built in."],
+            ["CMS setup", "Collections configured so your team can add or edit content without touching design."],
+            ["Team training", "A short walkthrough so your team is confident editing the site after launch."]
+          ],
+          deliverables: ["Full Webflow build", "CMS collections configured", "Responsive interactions", "Editor training session"]
+        },
+        "landing-pages": {
+          category: "Development", name: "Landing pages",
+          lede: "Fast-loading, built-to-convert pages for campaigns and launches, live in days rather than weeks.",
+          tags: ["Speed", "Campaigns", "Analytics-ready"],
+          steps: [
+            ["Design handoff or design-and-build", "We build from an approved design, or design and build in one pass for speed."],
+            ["Development", "Lightweight, fast-loading code with no unnecessary bloat."],
+            ["Tracking setup", "Analytics and conversion tracking wired in before launch, not after."],
+            ["Launch", "Page goes live on your domain, tested and ready for traffic."]
+          ],
+          deliverables: ["Built &amp; deployed landing page", "Mobile-optimised build", "Analytics &amp; tracking setup", "Launch support"]
+        },
+        "cms-integration": {
+          category: "Development", name: "CMS integration",
+          lede: "Content management wired into your site so your team can publish updates without filing a dev ticket.",
+          tags: ["CMS", "Content ops", "Training"],
+          steps: [
+            ["CMS selection", "We recommend the right CMS for your team's skill level and content volume."],
+            ["Content modelling", "Fields and collections structured around your actual content, not a generic template."],
+            ["Integration", "CMS connected to the front-end so content updates reflect on the live site instantly."],
+            ["Team training", "Your team is walked through publishing so they're independent from day one."]
+          ],
+          deliverables: ["CMS setup &amp; content model", "Integrated front-end", "Editor permissions setup", "Team training session"]
+        },
+        "e-commerce": {
+          category: "Development", name: "E-commerce",
+          lede: "Online stores built to convert browsers into buyers, with checkout flows that don't lose people at the last step.",
+          tags: ["Checkout", "Payments", "Catalogue"],
+          steps: [
+            ["Platform &amp; scope", "We choose the right e-commerce platform based on catalogue size and your growth plans."],
+            ["Store build", "Product pages, cart and checkout built and styled in your brand system."],
+            ["Payments &amp; shipping", "Payment gateways and shipping rules configured and tested end to end."],
+            ["Launch &amp; QA", "Full checkout flow tested with real transactions before going live."]
+          ],
+          deliverables: ["Full store build", "Payment gateway integration", "Product catalogue setup", "Checkout QA &amp; launch"]
+        },
+        "performance-optimization": {
+          category: "Development", name: "Performance optimization",
+          lede: "Faster load times mean fewer people bouncing before they see what you built. We find and fix what's slowing you down.",
+          tags: ["Speed", "Core Web Vitals", "Technical"],
+          steps: [
+            ["Performance audit", "We measure load times, Core Web Vitals and identify the biggest bottlenecks."],
+            ["Asset optimisation", "Images, scripts and fonts optimised or lazy-loaded without visual changes."],
+            ["Code cleanup", "Unused code and render-blocking resources removed or deferred."],
+            ["Re-test &amp; report", "Before-and-after metrics so you can see the concrete improvement."]
+          ],
+          deliverables: ["Performance audit report", "Asset &amp; image optimisation", "Code-level fixes", "Before/after metrics report"]
+        },
+        "technical-seo": {
+          category: "Development", name: "Technical SEO",
+          lede: "The unglamorous groundwork — site speed, structure, and markup — that lets your content actually get found.",
+          tags: ["SEO", "Site structure", "Markup"],
+          steps: [
+            ["Technical audit", "We check crawlability, indexing, site structure and markup for issues."],
+            ["Fix critical issues", "Broken links, missing metadata and structural problems are resolved first."],
+            ["On-page setup", "Titles, meta descriptions and structured data implemented across key pages."],
+            ["Monitoring setup", "Basic tracking put in place so you can see the impact over time."]
+          ],
+          deliverables: ["Technical SEO audit", "On-page metadata &amp; structured data", "Sitemap &amp; robots.txt setup", "Search Console configuration"]
+        },
+        "ongoing-maintenance": {
+          category: "Development", name: "Ongoing maintenance",
+          lede: "So your site keeps running well after launch — updates, fixes and small improvements, handled without you having to think about it.",
+          tags: ["Support", "Updates", "Monitoring"],
+          steps: [
+            ["Plan setup", "We agree on scope and response times based on how critical the site is to your business."],
+            ["Monitoring", "Uptime and performance monitored so issues are caught before your users notice."],
+            ["Regular updates", "Software, plugins and dependencies kept current and secure."],
+            ["Small requests", "Minor content or design tweaks handled on an ongoing basis without a new project each time."]
+          ],
+          deliverables: ["Uptime &amp; performance monitoring", "Regular software updates", "Monthly maintenance report", "Priority support access"]
+        }
+      };
+
+      var CATEGORY_ORDER = ["Branding", "Design", "Development"];
+
+      function qs(name) {
+        var params = new URLSearchParams(window.location.search);
+        return params.get(name);
+      }
+
+      function render() {
+        var root = document.getElementById('detailRoot');
+        var slug = qs('s');
+        var data = slug && SERVICES[slug];
+
+        if (!data) {
+          root.innerHTML =
+            '<div class="detail-not-found">' +
+              '<h1>Service not found</h1>' +
+              '<p>We could not find that service. Take a look at everything we offer instead.</p>' +
+              '<a href="service.html" class="btn-primary">View all services</a>' +
+            '</div>';
+          document.title = 'Service not found — Vellum Studio';
+          return;
+        }
+
+        document.title = data.name.replace(/&amp;/g, '&') + ' — Vellum Studio';
+
+        var stepsHtml = data.steps.map(function (s, i) {
+          return (
+            '<div class="process-step">' +
+              '<div class="process-num">0' + (i + 1) + '</div>' +
+              '<div>' +
+                '<div class="process-name">' + s[0] + '</div>' +
+                '<p class="process-text">' + s[1] + '</p>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        var tagsHtml = data.tags.map(function (t) { return '<span>' + t + '</span>'; }).join('');
+        var deliverablesHtml = data.deliverables.map(function (d) { return '<li>' + d + '</li>'; }).join('');
+
+        var related = Object.keys(SERVICES)
+          .filter(function (key) { return key !== slug && SERVICES[key].category === data.category; })
+          .slice(0, 6);
+        var relatedHtml = related.map(function (key) {
+          return '<a href="service-detail.html?s=' + key + '">' + SERVICES[key].name +
+            '<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>';
+        }).join('');
+
+        root.innerHTML =
+          '<div class="detail-hero">' +
+            '<div class="detail-category">' + data.category + '</div>' +
+            '<h1 class="detail-title">' + data.name + '</h1>' +
+            '<p class="detail-lede">' + data.lede + '</p>' +
+            '<div class="detail-tags">' + tagsHtml + '</div>' +
+          '</div>' +
+          '<div class="detail-grid">' +
+            '<div>' +
+              '<div class="eyebrow">How we work</div>' +
+              '<h2 class="section-title" style="margin-bottom:32px;">Our process for ' + data.name.toLowerCase() + '</h2>' +
+              '<div class="process-list">' + stepsHtml + '</div>' +
+            '</div>' +
+            '<div class="deliverables-box">' +
+              '<h3>What you get</h3>' +
+              '<ul class="deliverables-list">' + deliverablesHtml + '</ul>' +
+              '<a href="contact.html" class="btn-primary">Start this project</a>' +
+            '</div>' +
+          '</div>' +
+          (related.length ? (
+            '<div class="related-wrap">' +
+              '<div class="related-title">More in ' + data.category + '</div>' +
+              '<div class="related-list">' + relatedHtml + '</div>' +
+            '</div>'
+          ) : '');
+      }
+
+      render();
+    </script>
+  <!-- ============ CTA ============ -->
+  <section class="inner cta">
+    <h2 class="cta-title">Ready to give your brand the place it deserves?</h2>
+    <p class="cta-desc">Let's talk about your project. Free 30-minute intro call, no strings attached.</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="btn-primary">Start Your Project</a>
+      <a href="index.html#projects" class="btn-secondary">View Our Work</a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <div class="footer-wrap">
+    <footer class="inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-cta-label">Let's build something</div>
+          <h3 class="footer-cta-title">Have a project in mind?<br>We'd love to hear about it.</h3>
+          <a href="mailto:hello@vellumstudio.co" class="footer-cta-link">
+            hello@vellumstudio.co
+            <span class="arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Studio</h4>
+            <a href="index.html#home">Home</a>
+            <a href="service.html">Services</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="index.html#pricing">Pricing</a>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <a href="mailto:hello@vellumstudio.co">hello@vellumstudio.co</a>
+            <a href="tel:+33142685300">+33 1 42 68 53 00</a>
+            <a href="#">Paris, France</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-left">
+          <img src="logo.svg" alt="Vellum Studio" class="logo-image-small">
+          <span>© 2026 Vellum Studio. All rights reserved.</span>
+        </div>
+        <div class="footer-socials">
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Behance</a>
+        </div>
+      </div>
+
+      <div class="footer-mark">Vellum Studio</div>
+    </footer>
+  </div>
+
+</div>
+
+<script src="assets/site-fx.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — Vellum Studio</title>
+<style>
+  :root {
+            --fizens-blue: #111;
+        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #111 #e4e4e4; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #f4f4f4;
+    color: #111;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: #e4e4e4; }
+  ::-webkit-scrollbar-thumb {
+    background-color: #111;
+    border-radius: 999px;
+    border: 3px solid #e4e4e4;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: #444; }
+
+  a { color: inherit; }
+  img, svg { display: block; }
+
+  .container { width: 100%; background: #f4f4f4; }
+  .inner { max-width: 1400px; margin: 0 auto; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #111;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    padding: 7px 16px 7px 12px;
+    margin-bottom: 16px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #111;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* ============ NAVBAR ============ */
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 94px;
+    border-bottom: 1px solid #e0e0e0;
+    flex-wrap: wrap;
+    gap: 16px;
+    position: relative;
+  }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo-image { height: 20px; width: auto; display: block; }
+  .logo-image-small { height: 16px; width: auto; display: block; }
+
+  .nav-links { display: flex; gap: 36px; flex-wrap: wrap; }
+  .nav-links a { text-decoration: none; color: #666; font-size: 15px; font-weight: 400; white-space: nowrap; transition: color .15s ease; }
+  .nav-links a:hover { color: #111; }
+  .nav-links a.active { color: #111; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 1001;
+    position: relative;
+  }
+  .hamburger span {
+    width: 24px;
+    height: 2px;
+    background: #111;
+    display: block;
+    transition: transform .3s cubic-bezier(.65,0,.35,1), opacity .2s ease;
+  }
+  .hamburger.is-active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.is-active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.is-active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: #111;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 48px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-16px);
+    transition: opacity .4s ease, transform .4s ease, visibility 0s linear .4s;
+  }
+  .mobile-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity .45s ease, transform .45s ease;
+  }
+  .mobile-menu-links { display: flex; flex-direction: column; gap: 22px; margin-bottom: 48px; }
+  .mobile-menu-links a {
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.8px;
+    color: #f4f4f4;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .mobile-menu.is-open .mobile-menu-links a { opacity: 1; transform: translateY(0); }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(1) { transition-delay: .08s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(2) { transition-delay: .15s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(3) { transition-delay: .22s; }
+  .mobile-menu.is-open .mobile-menu-links a:nth-child(4) { transition-delay: .29s; }
+
+  .mobile-menu-contact {
+    background: #f4f4f4 !important;
+    color: #111 !important;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .5s ease, transform .5s ease;
+    transition-delay: .36s;
+    align-self: flex-start;
+  }
+  .mobile-menu.is-open .mobile-menu-contact { opacity: 1; transform: translateY(0); }
+
+  body.menu-open { overflow: hidden; }
+
+  .btn-contact {
+    background: #111;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* ============ PAGE HEADER ============ */
+  .page-header { padding: 64px 94px 0; max-width: 760px; }
+  .page-header .section-title { font-size: 48px; font-weight: 500; letter-spacing: -1.3px; line-height: 1.12; max-width: 640px; margin-bottom: 16px; }
+  .page-header .section-desc { font-size: 16px; color: #666; line-height: 1.6; max-width: 460px; }
+
+  /* ============ SECTION SHELL ============ */
+  section.block { padding: 96px 94px; }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 64px;
+    flex-wrap: wrap;
+  }
+  .section-title { font-size: 40px; font-weight: 500; letter-spacing: -1px; line-height: 1.15; max-width: 560px; }
+  .section-desc { font-size: 16px; color: #666; line-height: 1.6; max-width: 380px; }
+
+  /* ============ SERVICES DETAIL ============ */
+  .services-detail { padding-top: 40px; display: flex; flex-direction: column; }
+
+  .service-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 48px;
+    padding: 64px 94px;
+    border-top: 1px solid #e0e0e0;
+    align-items: start;
+  }
+  .service-row:last-child { border-bottom: 1px solid #e0e0e0; }
+
+  .service-row-index { font-size: 15px; font-weight: 600; color: #999; letter-spacing: 1px; padding-top: 4px; }
+
+  .service-row-main { max-width: 420px; }
+  .service-row-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .service-row-icon svg { stroke: #111; }
+  .service-row-name { font-size: 28px; font-weight: 500; letter-spacing: -0.5px; margin-bottom: 12px; }
+  .service-row-text { font-size: 15px; color: #666; line-height: 1.65; margin-bottom: 28px; }
+
+  .service-row-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .service-row-tags span { font-size: 12px; color: #666; border: 1px solid #ccc; border-radius: 999px; padding: 6px 13px; }
+
+  .service-row-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; align-content: start; }
+  .service-row-list li { border-top: 1px solid #e8e8e8; }
+  .service-row-list li:nth-child(1), .service-row-list li:nth-child(2) { border-top: none; }
+
+  .service-row-list li a {
+    font-size: 14.5px;
+    color: #333;
+    text-decoration: none;
+    padding: 11px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color .15s ease, gap .15s ease;
+  }
+  .service-row-list li a::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: #999; flex-shrink: 0; transition: background .15s ease; }
+  .service-row-list li a .item-arrow {
+    display: inline-flex;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity .18s ease, transform .18s ease;
+    margin-left: auto;
+  }
+  .service-row-list li a .item-arrow svg { stroke: #111; }
+  .service-row-list li a:hover { color: #111; gap: 14px; }
+  .service-row-list li a:hover::before { background: #111; }
+  .service-row-list li a:hover .item-arrow { opacity: 1; transform: translateX(0); }
+
+  /* ============ APPROACH STRIP ============ */
+  .approach { background: #111; color: #f4f4f4; }
+  .approach .eyebrow { color: #f4f4f4; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14); }
+  .approach .eyebrow::before { background: #f4f4f4; }
+  .approach .section-desc { color: #999; }
+
+  .approach-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); margin-top: 8px; }
+  .approach-card { background: #111; padding: 36px 30px; }
+  .approach-num { font-size: 13px; color: #777; font-weight: 600; letter-spacing: 1px; margin-bottom: 22px; }
+  .approach-name { font-size: 19px; font-weight: 500; margin-bottom: 10px; letter-spacing: -0.2px; }
+  .approach-text { font-size: 14px; color: #999; line-height: 1.6; }
+
+  /* ============ FAQ ============ */
+  .faq-list { max-width: 780px; }
+  .faq-item { border-top: 1px solid #e0e0e0; }
+  .faq-item:last-child { border-bottom: 1px solid #e0e0e0; }
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 26px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    color: #111;
+    font-family: inherit;
+  }
+  .faq-icon { width: 20px; height: 20px; position: relative; flex-shrink: 0; }
+  .faq-icon::before, .faq-icon::after {
+    content: '';
+    position: absolute;
+    background: #111;
+    transition: transform .25s ease;
+  }
+  .faq-icon::before { top: 9px; left: 0; width: 20px; height: 2px; }
+  .faq-icon::after { top: 0; left: 9px; width: 2px; height: 20px; }
+  .faq-item.is-open .faq-icon::after { transform: rotate(90deg); opacity: 0; }
+
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+  .faq-answer-inner { padding-bottom: 26px; font-size: 15px; color: #666; line-height: 1.7; max-width: 640px; }
+
+  /* ============ CTA ============ */
+  .cta { background: #111; color: #f4f4f4; text-align: center; padding: 110px 94px; }
+  .cta-title { font-size: 44px; font-weight: 500; letter-spacing: -1.2px; max-width: 640px; margin: 0 auto 16px; line-height: 1.15; }
+  .cta-desc { font-size: 16px; color: #999; max-width: 480px; margin: 0 auto 40px; line-height: 1.6; }
+  .cta .btn-primary { background: #f4f4f4; color: #111; }
+  .cta .btn-primary:hover { background: #fff; }
+  .cta .btn-secondary { border-color: #444; color: #f4f4f4; }
+  .cta .btn-secondary:hover { border-color: #999; }
+  .cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .btn-primary { background: #111; color: #fff; padding: 16px 32px; border-radius: 999px; font-size: 15px; font-weight: 500; border: none; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
+  .btn-secondary { background: transparent; color: #111; padding: 16px 32px; border-radius: 999px; font-size: 15px; font-weight: 500; border: 1px solid #ccc; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary:hover { border-color: #111; }
+
+  /* ============ FOOTER ============ */
+  .footer-wrap { background: #f4f4f4; color: #111; }
+  footer { padding: 96px 94px 0; position: relative; overflow: hidden; }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    flex-wrap: wrap;
+    padding-bottom: 72px;
+    border-bottom: 1px solid #dcdcdc;
+  }
+  .footer-cta-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 999px;
+    padding: 7px 16px 7px 12px;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer-cta-label::before { content: ''; width: 6px; height: 6px; background: #111; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .footer-cta-title { font-size: 34px; font-weight: 500; letter-spacing: -0.8px; line-height: 1.2; max-width: 460px; margin-bottom: 28px; color: #111; }
+  .footer-cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #111;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 1px solid #111;
+    padding-bottom: 6px;
+  }
+  .footer-cta-link .arrow { transition: transform .2s ease; }
+  .footer-cta-link:hover .arrow { transform: translate(3px, -3px); }
+
+  .footer-links { display: flex; gap: 72px; flex-wrap: wrap; }
+  .footer-col h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 20px; }
+  .footer-col a { display: block; font-size: 15px; color: #555; text-decoration: none; margin-bottom: 13px; transition: color .15s ease; }
+  .footer-col a:hover { color: #111; }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 28px 0;
+    font-size: 13px;
+    color: #888;
+  }
+  .footer-bottom-left { display: flex; align-items: center; gap: 10px; }
+  .footer-socials { display: flex; gap: 24px; }
+  .footer-socials a { color: #777; text-decoration: none; font-size: 13px; transition: color .15s ease; }
+  .footer-socials a:hover { color: #111; }
+
+  .footer-mark {
+    font-size: clamp(70px, 14vw, 200px);
+    font-weight: 500;
+    letter-spacing: -4px;
+    color: #111;
+    opacity: 0.045;
+    white-space: nowrap;
+    line-height: 1;
+    text-align: center;
+    padding: 10px 0 0;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1100px) {
+    .navbar, .page-header, section.block, .cta, footer { padding-left: 48px; padding-right: 48px; }
+    .service-row { padding-left: 48px; padding-right: 48px; }
+    .page-header .section-title { font-size: 40px; }
+    .section-title { font-size: 34px; }
+    .cta-title { font-size: 36px; }
+    .service-row { grid-template-columns: 60px 1fr; }
+    .service-row-list { grid-column: 1 / -1; margin-top: 12px; }
+    .approach-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .navbar .btn-contact { display: none; }
+    section.block { padding: 72px 48px; }
+    .service-row { padding: 48px; grid-template-columns: 1fr; }
+    .service-row-index { padding-top: 0; }
+    .service-row-list { grid-template-columns: 1fr; }
+    .footer-top { flex-direction: column; gap: 40px; padding-bottom: 48px; }
+    .footer-links { gap: 40px; }
+  }
+
+  @media (max-width: 600px) {
+    .navbar, .page-header, section.block, .cta, footer { padding-left: 24px; padding-right: 24px; }
+    .service-row { padding: 40px 24px; }
+    .page-header { padding-top: 40px; }
+    .page-header .section-title { font-size: 30px; }
+    .section-title { font-size: 26px; }
+    .section-head { margin-bottom: 40px; }
+    .approach-grid { grid-template-columns: 1fr; }
+    .cta-title { font-size: 28px; }
+    .cta-buttons { flex-direction: column; align-items: stretch; width: 100%; }
+    .cta { padding: 72px 24px; }
+    .footer-cta-title { font-size: 26px; }
+    .footer-links { gap: 32px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+    .footer-mark { display: none; }
+  }
+   #splash-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background-color: var(--fizens-blue);
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            align-items: center;
+            z-index: 10000000000;
+            animation: exitSplash 0.8s cubic-bezier(0.85, 0, 0.15, 1) 0.4s forwards;
+        }
+        @keyframes exitSplash {
+            to { transform: translateX(100%); }
+        }
+</style>
+<link rel="stylesheet" href="assets/site-fx.css">
+</head>
+<body>
+<div id="splash-container"></div>
+<div class="container">
+
+  <!-- ============ NAVBAR ============ -->
+  <section class="inner">
+    <nav class="navbar">
+      <a href="index.html" class="logo">
+        <img src="logo.svg" alt="Vellum Studio" class="logo-image">
+      </a>
+      <div class="nav-links">
+        <a href="index.html" >Home</a>
+        <a href="service.html" class="active">Services</a>
+        <a href="projets.html" >Projects</a>
+        <a href="pricing.html" >Pricing</a>
+        <a href="blog.html" >Blog</a>
+      </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <button class="btn-contact" onclick="document.getElementById('name').focus()">Contact</button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-links">
+        <a href="index.html">Home</a>
+        <a href="service.html" class="active">Services</a>
+        <a href="projets.html">Projects</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html" >Blog</a>
+      </div>
+      <button class="btn-contact mobile-menu-contact">Contact</button>
+    </div>
+
+    <script>
+      (function () {
+        const btn = document.getElementById('hamburgerBtn');
+        const menu = document.getElementById('mobileMenu');
+        if (!btn || !menu) return;
+
+        function closeMenu() {
+          btn.classList.remove('is-active');
+          menu.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('menu-open');
+        }
+        function openMenu() {
+          btn.classList.add('is-active');
+          menu.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+          document.body.classList.add('menu-open');
+        }
+
+        btn.addEventListener('click', function () {
+          if (menu.classList.contains('is-open')) closeMenu(); else openMenu();
+        });
+
+        menu.querySelectorAll('a').forEach(function (el) {
+          el.addEventListener('click', closeMenu);
+        });
+
+        window.addEventListener('resize', function () {
+          if (window.innerWidth > 900) closeMenu();
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeMenu();
+        });
+      })();
+    </script>
+
+    <script>
+      // Custom slow-eased smooth scroll (desktop wheel + anchor links),
+      // matching the home page. Native touch scrolling on mobile is untouched.
+      (function () {
+        const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (!isFinePointer) return;
+
+        let current = window.scrollY;
+        let target = window.scrollY;
+        const EASE = 0.045;
+        const WHEEL_SPEED = 0.68;
+        let running = false;
+
+        function maxScroll() {
+          return document.documentElement.scrollHeight - window.innerHeight;
+        }
+        function clamp(v) {
+          return Math.min(Math.max(v, 0), maxScroll());
+        }
+        function loop() {
+          current += (target - current) * EASE;
+          if (Math.abs(target - current) < 0.4) current = target;
+          window.scrollTo(0, current);
+          if (current !== target) {
+            requestAnimationFrame(loop);
+          } else {
+            running = false;
+          }
+        }
+        function kick() {
+          if (!running) {
+            running = true;
+            requestAnimationFrame(loop);
+          }
+        }
+
+        window.addEventListener('wheel', function (e) {
+          e.preventDefault();
+          target = clamp(target + e.deltaY * WHEEL_SPEED);
+          kick();
+        }, { passive: false });
+
+        window.addEventListener('keydown', function (e) {
+          const step = window.innerHeight * 0.85;
+          let handled = true;
+          switch (e.key) {
+            case 'ArrowDown': target = clamp(target + 80); break;
+            case 'ArrowUp': target = clamp(target - 80); break;
+            case 'PageDown': case ' ': target = clamp(target + step); break;
+            case 'PageUp': target = clamp(target - step); break;
+            case 'Home': target = 0; break;
+            case 'End': target = maxScroll(); break;
+            default: handled = false;
+          }
+          if (handled) { e.preventDefault(); kick(); }
+        }, { passive: false });
+
+        window.addEventListener('resize', function () {
+          target = clamp(target);
+        });
+
+        document.addEventListener('click', function (e) {
+          const link = e.target.closest('a[href^="#"]');
+          if (!link) return;
+          const id = link.getAttribute('href').slice(1);
+          const el = id ? document.getElementById(id) : null;
+          if (!el) return;
+          e.preventDefault();
+          target = clamp(el.getBoundingClientRect().top + window.scrollY);
+          kick();
+        });
+
+        current = target = window.scrollY;
+        window.__smoothScrollTo = function (y) { target = clamp(y); kick(); };
+        window.__smoothScrollGetTarget = function () { return target; };
+      })();
+    </script>
+
+    <!-- ============ PAGE HEADER ============ -->
+    <div class="page-header">
+      <div class="eyebrow">What we do</div>
+      <h1 class="section-title">Three disciplines, one team behind your brand</h1>
+      <p class="section-desc">Strategy, design and code, handled by the same small team from first sketch to final launch. Explore what's included in each discipline below.</p>
+    </div>
+
+    <!-- ============ SERVICES DETAIL ============ -->
+    <div class="services-detail">
+
+      <div class="service-row">
+        <div class="service-row-index">01</div>
+        <div class="service-row-main">
+          <div class="service-row-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3C7.03 3 3 6.58 3 11c0 3.31 2.24 6.15 5.44 7.36.4.15.83-.15.83-.58v-1.55c-2.2.48-2.67-1.06-2.67-1.06-.36-.92-.88-1.16-.88-1.16-.72-.5.05-.49.05-.49.8.06 1.22.82 1.22.82.71 1.22 1.86.87 2.31.66.07-.52.28-.87.5-1.07-1.76-.2-3.6-.88-3.6-3.92 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.05-1.85 3.72-3.61 3.92.29.25.54.73.54 1.48v2.2c0 .43.42.73.83.58C18.76 17.15 21 14.31 21 11c0-4.42-4.03-8-9-8Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="9" cy="10" r="1.1" fill="currentColor" stroke="none"/>
+              <circle cx="13" cy="8.5" r="1.1" fill="currentColor" stroke="none"/>
+              <circle cx="15.5" cy="11.5" r="1.1" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <h2 class="service-row-name">Branding</h2>
+          <p class="service-row-text">We build distinctive brand identities that connect with your audience — from the first mark to a system your whole team can use with confidence.</p>
+          <div class="service-row-tags">
+            <span>Strategy</span>
+            <span>Identity</span>
+            <span>Guidelines</span>
+          </div>
+        </div>
+        <ul class="service-row-list">
+          <li><a href="service-detail.html?s=brand-strategy-positioning">Brand strategy &amp; positioning<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=naming">Naming<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=logo-design">Logo design<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=brand-guidelines">Brand guidelines<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=rebranding">Rebranding<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=pitch-decks">Pitch decks<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=social-media-kits">Social media kits<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=print-packaging">Print &amp; packaging<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+        </ul>
+      </div>
+
+      <div class="service-row">
+        <div class="service-row-index">02</div>
+        <div class="service-row-main">
+          <div class="service-row-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="4" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <path d="M7 13l3-3 2.5 2.5L17 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2 class="service-row-name">Design</h2>
+          <p class="service-row-text">Clean, intuitive interfaces designed to engage and convert — grounded in real user flows, not just decoration.</p>
+          <div class="service-row-tags">
+            <span>UI/UX</span>
+            <span>Systems</span>
+            <span>Prototyping</span>
+          </div>
+        </div>
+        <ul class="service-row-list">
+          <li><a href="service-detail.html?s=ui-ux-design">UI/UX design<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=web-design">Web design<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=landing-page-design">Landing page design<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=design-systems">Design systems<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=ui-ux-audits">UI/UX audits<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=website-redesign">Website redesign<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=mobile-app-design">Mobile app design<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=wireframing">Wireframing<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+        </ul>
+      </div>
+
+      <div class="service-row">
+        <div class="service-row-index">03</div>
+        <div class="service-row-main">
+          <div class="service-row-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 8L3 12.5L8 17" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 8L21 12.5L16 17" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.5 4.5L10.5 20.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h2 class="service-row-name">Development</h2>
+          <p class="service-row-text">Fast, scalable websites built to perform — clean code, solid architecture, and a CMS your team can actually use.</p>
+          <div class="service-row-tags">
+            <span>Front-end</span>
+            <span>CMS</span>
+            <span>Performance</span>
+          </div>
+        </div>
+        <ul class="service-row-list">
+          <li><a href="service-detail.html?s=web-development">Web development<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=webflow-development">Webflow development<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=landing-pages">Landing pages<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=cms-integration">CMS integration<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=e-commerce">E-commerce<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=performance-optimization">Performance optimization<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=technical-seo">Technical SEO<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+          <li><a href="service-detail.html?s=ongoing-maintenance">Ongoing maintenance<span class="item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ APPROACH ============ -->
+  <section class="inner block approach">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">How we work</div>
+        <h2 class="section-title">One team, every discipline, no handoffs lost in translation</h2>
+      </div>
+      <p class="section-desc">Whichever service you start with, the same people carry it through — so nothing gets lost between strategy, design and code.</p>
+    </div>
+
+    <div class="approach-grid">
+      <div class="approach-card">
+        <div class="approach-num">01</div>
+        <div class="approach-name">Direct access</div>
+        <p class="approach-text">You work with the people actually doing the work, not account managers relaying messages.</p>
+      </div>
+      <div class="approach-card">
+        <div class="approach-num">02</div>
+        <div class="approach-name">Fixed scope</div>
+        <p class="approach-text">Clear deliverables and pricing up front, agreed before any work begins — no surprise invoices.</p>
+      </div>
+      <div class="approach-card">
+        <div class="approach-num">03</div>
+        <div class="approach-name">Built to last</div>
+        <p class="approach-text">Clean, documented handoffs so your team can maintain and extend the work after we're done.</p>
+      </div>
+      <div class="approach-card">
+        <div class="approach-num">04</div>
+        <div class="approach-name">Real support</div>
+        <p class="approach-text">30 days of post-launch support included, with ongoing plans available if you need more.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="inner block">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">FAQ</div>
+        <h2 class="section-title">Common questions about working with us</h2>
+      </div>
+      <p class="section-desc">Anything else? Reach out directly and we'll answer within one business day.</p>
+    </div>
+
+    <div class="faq-list" id="faqList">
+      <div class="faq-item">
+        <button class="faq-question" type="button">
+          Do you offer branding and development separately?
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Yes. Every service can be booked on its own — a logo and identity, a website build, or a design system for your product team. Most clients start with one and expand once they see how we work.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button">
+          How long does a typical project take?
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">A focused identity or landing page usually takes 2–3 weeks. A full brand and website build runs 5–8 weeks depending on scope and how quickly feedback comes back to us.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button">
+          Do you work with clients outside your studio's city?
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Most of our clients work with us remotely. Calls, shared boards and async updates keep things moving no matter where you're based.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" type="button">
+          What happens after launch?
+          <span class="faq-icon"></span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Every project includes 30 days of support for fixes and small adjustments. After that, we offer ongoing maintenance plans if you'd like us to keep looking after the site.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="inner cta">
+    <h2 class="cta-title">Ready to give your brand the place it deserves?</h2>
+    <p class="cta-desc">Let's talk about your project. Free 30-minute intro call, no strings attached.</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="btn-primary">Start Your Project</a>
+      <a href="index.html#projects" class="btn-secondary">View Our Work</a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <div class="footer-wrap">
+    <footer class="inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-cta-label">Let's build something</div>
+          <h3 class="footer-cta-title">Have a project in mind?<br>We'd love to hear about it.</h3>
+          <a href="mailto:hello@vellumstudio.co" class="footer-cta-link">
+            hello@vellumstudio.co
+            <span class="arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Studio</h4>
+            <a href="index.html#home">Home</a>
+            <a href="service.html">Services</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="index.html#pricing">Pricing</a>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <a href="mailto:hello@vellumstudio.co">hello@vellumstudio.co</a>
+            <a href="tel:+33142685300">+33 1 42 68 53 00</a>
+            <a href="#">Paris, France</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-left">
+          <img src="logo.svg" alt="Vellum Studio" class="logo-image-small">
+          <span>© 2026 Vellum Studio. All rights reserved.</span>
+        </div>
+        <div class="footer-socials">
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Behance</a>
+        </div>
+      </div>
+
+      <div class="footer-mark">Vellum Studio</div>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  // Simple accordion for the FAQ list
+  (function () {
+    const items = document.querySelectorAll('.faq-item');
+    items.forEach(function (item) {
+      const question = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+      question.addEventListener('click', function () {
+        const isOpen = item.classList.contains('is-open');
+
+        items.forEach(function (other) {
+          other.classList.remove('is-open');
+          other.querySelector('.faq-answer').style.maxHeight = null;
+        });
+
+        if (!isOpen) {
+          item.classList.add('is-open');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+      });
+    });
+  })();
+</script>
+
+<script src="assets/site-fx.js" defer></script>
+</body>
+</html>
