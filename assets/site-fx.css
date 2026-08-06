@@ -12,11 +12,11 @@
 .fx-reveal {
   opacity: 0;
   transform: translateY(32px);
-  filter: blur(6px);
+  filter: blur(2px);
   transition:
-    opacity .8s cubic-bezier(.22,.61,.36,1),
-    transform .8s cubic-bezier(.22,.61,.36,1),
-    filter .8s cubic-bezier(.22,.61,.36,1);
+    opacity .5s cubic-bezier(.22,.61,.36,1),
+    transform .5s cubic-bezier(.22,.61,.36,1),
+    filter .5s cubic-bezier(.22,.61,.36,1);
   will-change: opacity, transform, filter;
 }
 .fx-reveal.fx-in {
@@ -27,13 +27,13 @@
 
 /* stagger helper for grids of cards */
 .fx-reveal.fx-d1 { transition-delay: .06s; }
-.fx-reveal.fx-d2 { transition-delay: .12s; }
-.fx-reveal.fx-d3 { transition-delay: .18s; }
-.fx-reveal.fx-d4 { transition-delay: .24s; }
-.fx-reveal.fx-d5 { transition-delay: .30s; }
-.fx-reveal.fx-d6 { transition-delay: .36s; }
-.fx-reveal.fx-d7 { transition-delay: .42s; }
-.fx-reveal.fx-d8 { transition-delay: .48s; }
+.fx-reveal.fx-d2 { transition-delay: .10s; }
+.fx-reveal.fx-d3 { transition-delay: .13s; }
+.fx-reveal.fx-d4 { transition-delay: .22s; }
+.fx-reveal.fx-d5 { transition-delay: .28s; }
+.fx-reveal.fx-d6 { transition-delay: .34s; }
+.fx-reveal.fx-d7 { transition-delay: .40s; }
+.fx-reveal.fx-d8 { transition-delay: .43s; }
 
 /* ---------- Letter-by-letter blur/rise text ---------- */
 .fx-word {
@@ -43,7 +43,7 @@
   display: inline-block;
   opacity: 0;
   transform: translateY(0.42em);
-  filter: blur(9px);
+  filter: blur(5px);
   transition:
     opacity .55s cubic-bezier(.22,.61,.36,1),
     transform .55s cubic-bezier(.22,.61,.36,1),
