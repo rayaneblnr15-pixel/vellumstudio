@@ -14,9 +14,9 @@
   transform: translateY(32px);
   filter: blur(6px);
   transition:
-    opacity .8s cubic-bezier(.22,.61,.36,1),
-    transform .8s cubic-bezier(.22,.61,.36,1),
-    filter .8s cubic-bezier(.22,.61,.36,1);
+    opacity .4s cubic-bezier(.22,.61,.36,1),
+    transform .4s cubic-bezier(.22,.61,.36,1),
+    filter .4s cubic-bezier(.22,.61,.36,1);
   will-change: opacity, transform, filter;
 }
 .fx-reveal.fx-in {
@@ -26,14 +26,14 @@
 }
 
 /* stagger helper for grids of cards */
-.fx-reveal.fx-d1 { transition-delay: .06s; }
-.fx-reveal.fx-d2 { transition-delay: .12s; }
-.fx-reveal.fx-d3 { transition-delay: .18s; }
-.fx-reveal.fx-d4 { transition-delay: .24s; }
-.fx-reveal.fx-d5 { transition-delay: .30s; }
-.fx-reveal.fx-d6 { transition-delay: .36s; }
-.fx-reveal.fx-d7 { transition-delay: .42s; }
-.fx-reveal.fx-d8 { transition-delay: .48s; }
+.fx-reveal.fx-d1 { transition-delay: .03s; }
+.fx-reveal.fx-d2 { transition-delay: .6s; }
+.fx-reveal.fx-d3 { transition-delay: .9s; }
+.fx-reveal.fx-d4 { transition-delay: .12s; }
+.fx-reveal.fx-d5 { transition-delay: .15s; }
+.fx-reveal.fx-d6 { transition-delay: .18s; }
+.fx-reveal.fx-d7 { transition-delay: .21s; }
+.fx-reveal.fx-d8 { transition-delay: .24s; }
 
 /* ---------- Letter-by-letter blur/rise text ---------- */
 .fx-word {
@@ -45,10 +45,10 @@
   transform: translateY(0.42em);
   filter: blur(9px);
   transition:
-    opacity .55s cubic-bezier(.22,.61,.36,1),
-    transform .55s cubic-bezier(.22,.61,.36,1),
-    filter .55s cubic-bezier(.22,.61,.36,1);
-  transition-delay: calc(min(var(--fx-i, 0), 46) * 16ms);
+    opacity .30s cubic-bezier(.22,.61,.36,1),
+    transform .30s cubic-bezier(.22,.61,.36,1),
+    filter .30s cubic-bezier(.22,.61,.36,1);
+  transition-delay: calc(min(var(--fx-i, 0), 46) * 10ms);
   will-change: opacity, transform, filter;
 }
 [data-fx-split].fx-in .fx-char {
