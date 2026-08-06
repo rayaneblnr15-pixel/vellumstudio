@@ -12,7 +12,7 @@
 .fx-reveal {
   opacity: 0;
   transform: translateY(32px);
-  filter: blur(6px);
+  filter: blur(3px);
   transition:
     opacity .4s cubic-bezier(.22,.61,.36,1),
     transform .4s cubic-bezier(.22,.61,.36,1),
@@ -43,12 +43,12 @@
   display: inline-block;
   opacity: 0;
   transform: translateY(0.42em);
-  filter: blur(9px);
+  filter: blur(4px);
   transition:
     opacity .30s cubic-bezier(.22,.61,.36,1),
     transform .30s cubic-bezier(.22,.61,.36,1),
     filter .30s cubic-bezier(.22,.61,.36,1);
-  transition-delay: calc(min(var(--fx-i, 0), 46) * 10ms);
+  transition-delay: calc(min(var(--fx-i, 0), 46) * 5ms);
   will-change: opacity, transform, filter;
 }
 [data-fx-split].fx-in .fx-char {
