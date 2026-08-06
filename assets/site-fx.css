@@ -1,1 +1,58 @@
+/* ============================================================
+   Vellum Studio — site-wide motion layer
+   Scroll-reveal + letter-by-letter blur/rise text animation
+   ============================================================ */
 
+/* Respect users who don't want motion */
+@media (prefers-reduced-motion: reduce) {
+  .fx-reveal, .fx-char { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+}
+
+/* ---------- Block / card scroll reveal ---------- */
+.fx-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  filter: blur(6px);
+  transition:
+    opacity .8s cubic-bezier(.22,.61,.36,1),
+    transform .8s cubic-bezier(.22,.61,.36,1),
+    filter .8s cubic-bezier(.22,.61,.36,1);
+  will-change: opacity, transform, filter;
+}
+.fx-reveal.fx-in {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* stagger helper for grids of cards */
+.fx-reveal.fx-d1 { transition-delay: .06s; }
+.fx-reveal.fx-d2 { transition-delay: .12s; }
+.fx-reveal.fx-d3 { transition-delay: .18s; }
+.fx-reveal.fx-d4 { transition-delay: .24s; }
+.fx-reveal.fx-d5 { transition-delay: .30s; }
+.fx-reveal.fx-d6 { transition-delay: .36s; }
+.fx-reveal.fx-d7 { transition-delay: .42s; }
+.fx-reveal.fx-d8 { transition-delay: .48s; }
+
+/* ---------- Letter-by-letter blur/rise text ---------- */
+.fx-word {
+  display: inline-block;
+}
+.fx-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.42em);
+  filter: blur(9px);
+  transition:
+    opacity .55s cubic-bezier(.22,.61,.36,1),
+    transform .55s cubic-bezier(.22,.61,.36,1),
+    filter .55s cubic-bezier(.22,.61,.36,1);
+  transition-delay: calc(min(var(--fx-i, 0), 46) * 16ms);
+  will-change: opacity, transform, filter;
+}
+[data-fx-split].fx-in .fx-char {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
